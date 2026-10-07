@@ -249,17 +249,6 @@ Two things that behave the way they do on purpose:
   the field and again in the reducer, so the form cannot accept a length its
   own validation will reject.
 
-## Phase status
-
-| Phase | Scope                                                                                           | State                       |
-| ----- | ----------------------------------------------------------------------------------------------- | --------------------------- |
-| 1     | Static prototype fixes (print handout removed, fabricated stats removed, "Cases" → "Campaigns") | done — in the parent folder |
-| 1b    | Icon sprite + arch-radius button system                                                         | done — in the parent folder |
-| 2     | Scaffold, tokens, app shell, sprite, build tooling                                              | done                        |
-| 3     | Campaign data layer: domain model, API module, grid, loading / empty / error                    | done                        |
-| 4     | Donation flow: amount, method, Raast, card, receipt, as a reducer state machine                 | done                        |
-| 5     | `PaymentProvider` seam, card step code-split, memoisation, accessibility pass, error boundaries | done                        |
-
 ## Still to do before launch
 
 - Implement `PaymentProvider.tokenizeCard` with the payment provider's own
@@ -273,7 +262,10 @@ Two things that behave the way they do on purpose:
 
 ## The static prototype
 
-`../index.html`, `../styles.css`, `../app.js` and the bundled
-`../Neki-prototype.html` are the original hand-written prototype. They are kept
-as the design reference; the React app is the replacement. `node
-../build/make-single.js` rebuilds the single-file prototype.
+The repository root holds the original hand-written prototype: `index.html`,
+`styles.css` and `app.js`, which need no build step, plus `Neki-prototype.html`
+— the same thing bundled into one file. `build/make-single.js` rebuilds that
+bundle.
+
+It is kept as the design reference the React app was built from; the app in
+this directory is its replacement.
