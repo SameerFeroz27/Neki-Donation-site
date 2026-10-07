@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Neki — Donate with trust</title>
+<meta name="description" content="Neki is a donation platform for verified campaigns. Donate by Raast request-to-pay or credit / debit card." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ================= ICON SPRITE =================
+     Every icon lives here once and is referenced as a .ico svg with a
+     "use" pointing at the symbol id (#i-heart and so on). Keeping the
+     geometry in one place means no path data is duplicated across the page
+     or the campaign cards app.js builds, and a new icon is a single
+     definition. Stroke, fill and caps are set once on .ico in styles.css
+     and inherit through "use". -->
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <!-- ui icons -->
+  <symbol id="i-heart" viewBox="0 0 24 24">
+    <path d="M12 20s-7-4.4-7-9.2a4 4 0 0 1 7-2.8 4 4 0 0 1 7 2.8C19 15.6 12 20 12 20Z"/>
+  </symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24">
+    <path d="M4.6 12h14.2"/><path d="m12.8 6 6 6-6 6"/>
+  </symbol>
+  <symbol id="i-send" viewBox="0 0 24 24">
+    <path d="M20.6 3.9 3.7 10.5l6.6 2.4 2.4 6.6Z"/><path d="m10.3 12.9 4.4-4.4"/>
+  </symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24">
+    <rect x="4.8" y="10.4" width="14.4" height="9.4" rx="2.4"/>
+    <path d="M8.4 10.4V7.8a3.6 3.6 0 0 1 7.2 0v2.6"/>
+  </symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24">
+    <rect x="8.6" y="8.6" width="11" height="11" rx="2.2"/>
+    <path d="M15.4 5.4H6.8a2.4 2.4 0 0 0-2.4 2.4v8.6"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.6 4.4 4.4L19 7.4"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24">
+    <rect x="4.4" y="6" width="15.2" height="14" rx="2.6"/>
+    <path d="M4.4 10.4h15.2M9 4.4v3.2M15 4.4v3.2"/>
+  </symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24">
+    <path d="M4.6 12a7.4 7.4 0 0 1 12.6-5.2M19.4 12a7.4 7.4 0 0 1-12.6 5.2"/>
+    <path d="M17.4 3.4v3.6h-3.6M6.6 20.6v-3.6h3.6"/>
+  </symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7 7 17"/></symbol>
+
+  <!-- campaign categories, duotone: a soft mass plus a crisp outline -->
+  <symbol id="i-health" viewBox="0 0 24 24">
+    <path fill="currentColor" stroke="none" opacity=".18"
+          d="M12 20.2s-7.2-4.5-7.2-9.6A4.15 4.15 0 0 1 12 7.5a4.15 4.15 0 0 1 7.2 3.1c0 5.1-7.2 9.6-7.2 9.6Z"/>
+    <path d="M12 20.2s-7.2-4.5-7.2-9.6A4.15 4.15 0 0 1 12 7.5a4.15 4.15 0 0 1 7.2 3.1c0 5.1-7.2 9.6-7.2 9.6Z"/>
+    <path d="M5 12.4h2.8l1.4-2.5 2 4.1 1.5-2.9 1.2 1.3h5.1"/>
+  </symbol>
+  <symbol id="i-food" viewBox="0 0 24 24">
+    <path fill="currentColor" stroke="none" opacity=".18"
+          d="M3.9 11.4h16.2a8.1 8.1 0 0 1-16.2 0Z"/>
+    <path d="M3.9 11.4h16.2a8.1 8.1 0 0 1-16.2 0Z"/>
+    <path d="M5.2 15.4h13.6M8 19h8"/>
+  </symbol>
+  <symbol id="i-water" viewBox="0 0 24 24">
+    <path fill="currentColor" stroke="none" opacity=".18"
+          d="M12 3.6s6.1 6.4 6.1 10.4a6.1 6.1 0 0 1-12.2 0C5.9 10 12 3.6 12 3.6Z"/>
+    <path d="M12 3.6s6.1 6.4 6.1 10.4a6.1 6.1 0 0 1-12.2 0C5.9 10 12 3.6 12 3.6Z"/>
+    <path d="M9.3 14.6a2.7 2.7 0 0 0 2.6 2.4"/>
+  </symbol>
+  <symbol id="i-education" viewBox="0 0 24 24">
+    <path fill="currentColor" stroke="none" opacity=".18"
+          d="M3.6 5.6h6.3a2.4 2.4 0 0 1 2.1 1v11.2a2.6 2.6 0 0 0-2.1-.8H3.6Z"/>
+    <path fill="currentColor" stroke="none" opacity=".18"
+          d="M20.4 5.6h-6.3a2.4 2.4 0 0 0-2.1 1v11.2a2.6 2.6 0 0 1 2.1-.8h6.3Z"/>
+    <path d="M3.6 5.6h6.3a2.4 2.4 0 0 1 2.1 1v11.2a2.6 2.6 0 0 0-2.1-.8H3.6Z"/>
+    <path d="M20.4 5.6h-6.3a2.4 2.4 0 0 0-2.1 1v11.2a2.6 2.6 0 0 1 2.1-.8h6.3Z"/>
+  </symbol>
+  <symbol id="i-emergency" viewBox="0 0 24 24">
+    <path fill="currentColor" stroke="none" opacity=".18"
+          d="M3.9 12a8.1 8.1 0 1 1 16.2 0 8.1 8.1 0 0 1-16.2 0Z"/>
+    <circle cx="12" cy="12" r="8.1"/>
+    <path d="M12 8.3v7.4M8.3 12h7.4"/>
+  </symbol>
+  <symbol id="i-seasonal" viewBox="0 0 24 24">
+    <path fill="currentColor" stroke="none" opacity=".18"
+          d="M19.8 14.5A8.3 8.3 0 0 1 9.5 4.2a8.5 8.5 0 1 0 10.3 10.3Z"/>
+    <path d="M19.8 14.5A8.3 8.3 0 0 1 9.5 4.2a8.5 8.5 0 1 0 10.3 10.3Z"/>
+    <path d="m17.4 4.4.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8Z"/>
+  </symbol>
+</svg>
+
+<!-- ================= HEADER ================= -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4">
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+        </svg>
+      </span>
+      <span class="brand-text">Neki</span>
+    </a>
+    <nav class="nav">
+      <a href="#campaigns">Campaigns</a>
+      <a href="#about">About</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#campaigns" data-scroll>
+      <svg class="ico" viewBox="0 0 24 24"><use href="#i-heart"/></svg>Donate Now
+    </a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ================= APP NAME UPAR, DETAILS NEECHE ================= -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <span class="eyebrow">
+        <span class="logo tiny" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3">
+            <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+            <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+          </svg>
+        </span>
+        Verified campaigns · Zakat &amp; Sadaqah eligible
+      </span>
+
+      <h1 class="app-name">Neki</h1>
+      <p class="tagline">Give with trust.</p>
+
+      <p class="lede">
+        Neki is a donation platform for real, verified campaigns — a widow's monthly ration,
+        a child's surgery, a village hand-pump, a student's fees. Pick a campaign, choose your
+        amount, and pay the way you already pay: <strong>Request to Pay</strong> through
+        Raast, or <strong>credit / debit card</strong>. Every rupee is tracked, and each
+        campaign shows you exactly what it still needs.
+      </p>
+
+      <!-- Platform totals. Deliberately empty: app.js fills this only from
+           real API data (see renderStats), so no number is ever invented here. -->
+      <div class="hero-stats" id="hero-stats" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- ================= CAMPAIGNS ================= -->
+  <section class="section" id="campaigns">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Campaigns you can donate to</h2>
+        <p>Each campaign is verified by our field team. Give once, or set up a monthly gift.</p>
+      </div>
+      <div class="campaigns" id="campaigns-grid"></div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT / TRUST ================= -->
+  <section class="section section-alt" id="about">
+    <div class="wrap about">
+      <h2>About Neki</h2>
+      <p>
+        Donations are held in a dedicated account and released to each campaign in stages,
+        against bills and photos. Our platform fee is 0% — the full amount reaches the campaign.
+        Card details never touch our servers; they are handled by our PCI-DSS compliant
+        payment provider.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4">
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+        </svg>
+      </span>
+      <span class="brand-text">Neki</span>
+    </div>
+    <p>© <span id="year"></span> Neki · Frontend prototype — payments are simulated.</p>
+  </div>
+</footer>
+
+<!-- =========================================================
+     PAYMENT MODAL  (pic 1 / pic 2 / pic 3)
+     ========================================================= -->
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal-backdrop" data-close></div>
+
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+
+    <!-- modal header: logo + brand + title + close -->
+    <header class="sheet-head">
+      <span class="logo tile" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4">
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+        </svg>
+      </span>
+      <div class="sheet-head-text">
+        <p class="sheet-brand">Neki</p>
+        <h3 id="sheet-title">Choose payment method</h3>
+      </div>
+      <button class="sheet-x" type="button" aria-label="Close" data-close>
+        <svg class="ico" viewBox="0 0 24 24"><use href="#i-close"/></svg>
+      </button>
+    </header>
+
+    <!-- ---------- plan strip (pic 1 + pic 2) ---------- -->
+    <div class="plan-strip" id="plan-strip">
+      <div class="plan-left">
+        <p class="kicker">Selected campaign</p>
+        <div class="pills">
+          <span class="pill dark" id="plan-campaign">—</span>
+          <span class="pill" id="plan-freq">One-time</span>
+        </div>
+      </div>
+      <div class="plan-right">
+        <p class="tiny"><span id="plan-method-label">Total donation</span></p>
+        <p class="big" id="plan-amount">PKR 0</p>
+        <div class="plan-note">
+          <span class="pill gold" id="plan-badge">Fee covered</span>
+          <span class="muted" id="plan-note">Campaign receives PKR 0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== STEP 1 — AMOUNT ========== -->
+    <section class="panel" data-panel="amount">
+      <div class="card-soft">
+        <p class="kicker">Give once or monthly</p>
+        <div class="seg" id="frequency">
+          <button type="button" class="seg-btn on" data-freq="once">
+            <svg class="ico" viewBox="0 0 24 24"><use href="#i-calendar"/></svg>One-time
+          </button>
+          <button type="button" class="seg-btn" data-freq="monthly">
+            <svg class="ico" viewBox="0 0 24 24"><use href="#i-repeat"/></svg>Monthly
+          </button>
+        </div>
+
+        <p class="kicker mt">Choose amount</p>
+        <div class="presets" id="presets"></div>
+
+        <div class="input-money">
+          <span>PKR</span>
+          <input id="amount-input" type="text" inputmode="numeric" value="2,000" autocomplete="off" aria-label="Custom amount" />
+        </div>
+
+        <label class="check">
+          <input type="checkbox" id="cover-fee" checked />
+          <span>Add 2% to cover processing, so the campaign receives the full amount.</span>
+        </label>
+      </div>
+
+      <div class="summary"><span>Campaign receives</span><strong id="summary-receive">PKR 2,000</strong></div>
+      <button class="btn btn-primary btn-block btn-lg" type="button" id="to-pay">
+        Continue to payment
+        <svg class="ico" viewBox="0 0 24 24"><use href="#i-arrow-right"/></svg>
+      </button>
+    </section>
+
+    <!-- ========== STEP 2 — CHOOSE METHOD (pic 1) ========== -->
+    <section class="panel" data-panel="method" hidden>
+      <p class="disclaimer" id="method-note">Choose how you would like to pay.</p>
+
+      <div class="methods">
+        <!-- Request to Pay -->
+        <button class="method" type="button" data-goto="request">
+          <span class="m-logo raast" aria-hidden="true">
+            <span class="raast-mark">راست</span>
+            <span class="raast-word">Raast</span>
+          </span>
+          <span class="m-title">Request to Pay</span>
+          <span class="m-desc">Pay instantly from your bank app — no card needed.</span>
+          <span class="tagpill">Powered by Raast</span>
+        </button>
+
+        <!-- Card -->
+        <button class="method" type="button" data-goto="card">
+          <span class="m-logo" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none"><rect x="3" y="7" width="26" height="18" rx="4" stroke="currentColor" stroke-width="2"/><path d="M3 13h26" stroke="currentColor" stroke-width="2"/><path d="M8 20h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <span class="m-title">Credit / Debit Card</span>
+          <span class="m-desc">Visa &amp; Mastercard, secured by 3-D Secure.</span>
+          <span class="tagpill">Secure checkout</span>
+        </button>
+      </div>
+      <button class="link-back" type="button" data-goto="amount">← Change amount</button>
+    </section>
+
+    <!-- ========== STEP 2a — REQUEST TO PAY (pic 2) ========== -->
+    <section class="panel" data-panel="request" hidden>
+      <div class="details-row">
+        <span class="m-logo raast" aria-hidden="true">
+          <span class="raast-mark">راست</span>
+          <span class="raast-word">Raast</span>
+        </span>
+        <div class="details-text">
+          <b>Raast payment details</b>
+          <p>Send <span id="req-amount">PKR 0</span> from your bank app using the ID below.</p>
+          <span class="tagpill">Powered by Raast</span>
+        </div>
+      </div>
+
+      <!-- Mobile ID / IBAN toggle -->
+      <div class="toggle" id="req-toggle">
+        <button type="button" class="toggle-btn on" data-mode="mobile">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M11 18h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          Raast Mobile ID
+        </button>
+        <button type="button" class="toggle-btn" data-mode="iban">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 9.5 12 4l9 5.5M5 10v8m4-8v8m6-8v8m4-8v8M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          IBAN
+        </button>
+      </div>
+
+      <input id="req-input" class="field-input" type="text" inputmode="numeric" placeholder="03xxxxxxxxx" autocomplete="off" />
+      <p class="hint" id="req-hint">11 digits, starting with 03. We only use this to send the request.</p>
+
+      <button class="btn btn-primary btn-block btn-lg" type="button" id="send-request">
+        <svg class="ico" viewBox="0 0 24 24"><use href="#i-send"/></svg>Send request
+      </button>
+      <p class="fineprint">Approve the request in your bank app within 5 minutes. Nothing is charged until you approve it.</p>
+      <button class="link-back" type="button" data-goto="method">← Other payment methods</button>
+    </section>
+
+    <!-- ========== STEP 2b — CARD CHECKOUT (pic 3) ========== -->
+    <section class="panel" data-panel="card" hidden>
+      <div class="checkout">
+        <!-- left pane: summary -->
+        <div class="co-left">
+          <button class="back" type="button" data-goto="method">← Choose payment method</button>
+
+          <p class="co-merchant">
+            <span class="logo tile sm" aria-hidden="true">
+              <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4">
+                <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+                <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+              </svg>
+            </span>
+            NEKI
+          </p>
+
+          <p class="co-label" id="co-campaign-label">Donate to a campaign</p>
+          <p class="co-amount" id="co-amount">PKR 0 <span id="co-per">once</span></p>
+
+          <div class="currency" id="currency">
+            <button type="button" class="cur on" data-cur="PKR"><span class="flag-pk">₨</span> PKR</button>
+            <button type="button" class="cur" data-cur="USD"><span class="flag-us">$</span> USD</button>
+          </div>
+          <p class="rate" id="rate-line">1 USD = 278.50 PKR. Charges vary based on exchange rates.</p>
+
+          <div class="line-item">
+            <span class="logo tile sm" aria-hidden="true">
+              <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4">
+                <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+                <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+              </svg>
+            </span>
+            <div>
+              <b id="li-campaign">Campaign</b>
+              <small id="li-freq">One-time donation</small>
+            </div>
+            <b class="li-amt" id="li-amount">PKR 0</b>
+          </div>
+        </div>
+
+        <!-- right pane: card form -->
+        <form class="co-right" id="card-form" novalidate>
+          <div class="co-block">
+            <p class="co-block-title">Contact information</p>
+            <label class="sr" for="co-email">Email</label>
+            <input id="co-email" class="field-input" type="email" placeholder="Email" value="sameer@example.com" autocomplete="email" />
+          </div>
+
+          <div class="co-block">
+            <p class="co-block-title">Payment method</p>
+
+            <div class="card-box">
+              <p class="card-box-head">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 10h19" stroke="currentColor" stroke-width="1.8"/></svg>
+                Card
+              </p>
+              <p class="card-box-sub">Card information</p>
+
+              <div class="card-input">
+                <input id="card-number" type="text" inputmode="numeric" placeholder="1234 1234 1234 1234" autocomplete="cc-number" maxlength="23" aria-label="Card number" />
+                <span class="brands" id="brands">
+                  <span class="b-visa">VISA</span>
+                  <span class="b-mc"><i></i><i></i></span>
+                </span>
+              </div>
+
+              <div class="card-input half">
+                <input id="card-exp" type="text" inputmode="numeric" placeholder="MM / YY" autocomplete="cc-exp" maxlength="5" aria-label="Expiry" />
+                <input id="card-cvv" type="password" inputmode="numeric" placeholder="CVC" autocomplete="cc-csc" maxlength="4" aria-label="CVC" />
+                <span class="cvc-ico" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5.5" width="19" height="13" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 10h19" stroke="currentColor" stroke-width="1.6"/><path d="M17 13.5h2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                </span>
+              </div>
+              <p class="err" id="card-err"></p>
+            </div>
+
+            <label class="co-field">
+              <span>Cardholder name</span>
+              <input id="card-name" class="field-input" type="text" placeholder="Full name on card" autocomplete="cc-name" />
+            </label>
+
+            <label class="co-field">
+              <span>Country or region</span>
+              <select id="card-country" class="field-input">
+                <option>Pakistan</option><option>India</option><option>United Arab Emirates</option>
+                <option>United Kingdom</option><option>United States</option><option>Other</option>
+              </select>
+            </label>
+          </div>
+
+          <button class="btn btn-primary btn-block btn-lg" type="submit" id="card-submit">
+            <svg class="ico" viewBox="0 0 24 24"><use href="#i-lock"/></svg><span id="card-submit-label">Donate PKR 0</span>
+          </button>
+          <p class="fineprint lock-note">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10" stroke="currentColor" stroke-width="1.8"/></svg>
+            Encrypted and processed by our PCI-DSS compliant provider. We never store your card number.
+          </p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ========== STEP 3 — DONE ========== -->
+    <section class="panel done" data-panel="done" hidden>
+      <span class="seal" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4">
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+        </svg>
+        <svg class="tick" viewBox="0 0 24 24" fill="none"><path d="m5 12.6 4.4 4.4L19 7.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <h3 id="done-title">Donation received</h3>
+      <p class="done-sub" id="done-sub">Thank you. Your gift is on its way to the campaign.</p>
+
+      <div class="receipt">
+        <div><span>Campaign</span><b id="rc-campaign">—</b></div>
+        <div><span>Amount</span><b id="rc-amount">—</b></div>
+        <div><span>Method</span><b id="rc-method">—</b></div>
+        <div><span>Frequency</span><b id="rc-freq">—</b></div>
+        <div><span>Receipt ID</span><b id="rc-id">—</b></div>
+      </div>
+
+      <button class="btn btn-primary btn-block" type="button" id="copy-id">
+        <svg class="ico" viewBox="0 0 24 24"><use href="#i-copy"/></svg><span id="copy-id-label">Copy receipt ID</span>
+      </button>
+      <button class="btn btn-ghost btn-block" type="button" data-close>
+        <svg class="ico" viewBox="0 0 24 24"><use href="#i-check"/></svg>Done
+      </button>
+    </section>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
