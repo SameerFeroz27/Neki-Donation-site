@@ -11,6 +11,26 @@
   margin: 0;
   padding: 0;
 }
+
+/* Shown only while the development fixtures are standing in for an API, so a
+   page full of invented campaigns says so. */
+.sample-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--r-pill);
+  background: var(--gold50);
+  border: 1px solid var(--gold100);
+  color: var(--gold700);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.sample-note .ico {
+  width: 15px;
+  height: 15px;
+}
 .campaign-item {
   display: flex;
 }

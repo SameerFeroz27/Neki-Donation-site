@@ -11,13 +11,15 @@ import { apiGet } from './client'
 import { toCampaignList, toPlatformStats } from './mappers'
 import type { CampaignDto } from './types'
 
-/** Opt-in development fixtures; off unless VITE_USE_MOCK_API=true. */
-const USE_FIXTURES = import.meta.env.VITE_USE_MOCK_API === 'true'
+/**
+ * Read into a local const rather than imported, so the bundler can fold it
+ * here and drop the dynamic import below entirely when the fixtures are off.
+ */
+const USE_FIXTURES = __USING_FIXTURES__
 
 /**
- * Imported dynamically so the fixtures become their own chunk — a normal
- * build never downloads them. A module-scope import would ship them to
- * everyone regardless of the flag.
+ * Imported dynamically so the fixtures become their own chunk that a build
+ * without them never downloads.
  */
 async function fixtureCampaigns(): Promise<CampaignDto[]> {
   const { MOCK_CAMPAIGNS } = await import('./mockData')

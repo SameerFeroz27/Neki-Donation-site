@@ -3,6 +3,10 @@
 
    One decision, made once per page load, in one place. Components never see
    this — they call donation/submit.ts, which asks for the provider.
+
+   It follows the same switch as the campaign fixtures: no API configured
+   means the simulator, so a deployment with no backend still has a working
+   checkout to demonstrate.
    ========================================================= */
 import { createHttpPaymentProvider } from './http'
 import { createSimulatedPaymentProvider } from './simulated'
@@ -12,10 +16,9 @@ let instance: PaymentProvider | null = null
 
 export function paymentProvider(): PaymentProvider {
   if (instance === null) {
-    instance =
-      import.meta.env.VITE_USE_MOCK_API === 'true'
-        ? createSimulatedPaymentProvider()
-        : createHttpPaymentProvider()
+    instance = __USING_FIXTURES__
+      ? createSimulatedPaymentProvider()
+      : createHttpPaymentProvider()
   }
   return instance
 }

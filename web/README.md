@@ -27,21 +27,57 @@ into a subfolder for a demo. Dev requests to `/api` are proxied to
 
 ### Working without a live API
 
-`src/api/mockData.ts` holds development fixtures and `.env.development.local`
-turns them on. Two things make this safe:
+`src/api/mockData.ts` holds development fixtures, and they are **on unless
+there is a reason for them to be off**:
 
-- `.env.development.local` is read by `npm run dev` and **not** by
-  `npm run build`, so a production build can never ship them. Verified: with
-  the flag on, `dist/` grew a `mockData` chunk; with it off, the chunk is not
-  emitted at all.
-- The fixtures are in the **wire** shape, so they go through the same
-  validation in `api/mappers.ts` as a real response. A fixture cannot behave
-  differently from production data.
-- They cover campaigns only. There are no fixture totals, so the hero tile
-  shows its empty state while the fixtures are on — which is also the state a
-  real deployment starts in.
+| Configuration             | Result                         |
+| ------------------------- | ------------------------------ |
+| nothing set               | fixtures on                    |
+| `VITE_USE_MOCK_API=true`  | fixtures on                    |
+| `VITE_USE_MOCK_API=false` | fixtures off                   |
+| `VITE_API_BASE_URL=…`     | fixtures off, API used instead |
 
-Delete the fixtures file once there is a live API to read from.
+The "nothing set" row is deliberate. There was a version where fixtures had to
+be switched on explicitly, and a correctly-built deployment then showed an
+empty campaign grid with no way to reach the donation flow at all — the
+deployment looked broken because of a host setting nobody had made.
+
+Setting `VITE_API_BASE_URL` turns them off on its own, so connecting the API
+is the only change needed.
+
+The rule is resolved once in `vite.config.ts` and injected as the
+`__USING_FIXTURES__` literal. It lives there rather than in the source because
+the bundler must see a constant to drop the fixture chunk; reading it inside a
+module would ship 1.5 kB of fixture data to every build. Verified all three
+ways: the default build emits a `mockData` chunk, and both the flag and the
+API-URL builds emit none.
+
+The fixtures are in the **wire** shape, so they go through the same validation
+in `api/mappers.ts` as a real response — a fixture cannot behave differently
+from production data. They cover campaigns only; there are no fixture totals,
+so the hero tile stays in its empty state. While they are on, the campaign
+section shows a "Sample campaigns" note, which disappears with them.
+
+Delete `api/mockData.ts` and `payments/simulated.ts` once there is a live API.
+
+### Deploying
+
+The build is a static `dist/`, so any static host works. On Vercel, import the
+`web/` directory as the project root; the framework preset and build command
+are detected and **no environment variables or command overrides are needed**.
+Because fixtures default on, a plain deployment already has campaigns and a
+working donation flow.
+
+For a real deployment, set `VITE_API_BASE_URL` to the API origin. To keep the
+demo data but use an API for something else, set `VITE_USE_MOCK_API` explicitly
+instead.
+
+Vite inlines all of this at **build** time, so any change needs a redeploy.
+
+> A fixture deployment shows sample campaigns on a public URL, with sample
+> progress and a "verified" badge, and its checkout is simulated. Fine for a
+> team demo and confusing to anyone else — the page says so, but treat a demo
+> deployment as internal.
 
 ## Structure
 
@@ -56,7 +92,7 @@ src/
     mappers.ts           untrusted JSON -> domain, with validation
     client.ts            fetch wrapper: base URL, ApiError, abort
     campaigns.ts         the only module components import for data
-    mockData.ts          development fixtures — never shipped
+    mockData.ts          development fixtures — off once an API is configured
   hooks/useAsync.ts      async state with abort and retry
   lib/format.ts          currency and number formatting
   components/
@@ -80,7 +116,7 @@ src/
   payments/              the seam the backend plugs into
     types.ts             the PaymentProvider interface and its request shapes
     http.ts              the real one: our API + the payment provider
-    simulated.ts         development stand-in, never shipped
+    simulated.ts         development stand-in, used when no API is configured
     index.ts             picks one, once per page load
   styles/
     tokens.css           colour, shape, elevation, layout — the theming knob

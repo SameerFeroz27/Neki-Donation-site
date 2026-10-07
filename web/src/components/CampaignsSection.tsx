@@ -6,6 +6,7 @@ import { useAsync } from '../hooks/useAsync'
 import { CampaignCard } from './CampaignCard'
 import { ErrorBoundary } from './ErrorBoundary'
 import { StateBlock } from './StateBlock'
+import { Icon } from './Icon'
 
 /**
  * Placeholder cards the same height as real ones, so the section does not
@@ -47,6 +48,15 @@ export function CampaignsSection({
         <div className="section-head">
           <h2>{CAMPAIGNS_SECTION.title}</h2>
           <p>{CAMPAIGNS_SECTION.subtitle}</p>
+          {/* Only rendered while the fixtures are standing in for an API. It
+              removes itself, and its code, the moment VITE_API_BASE_URL is
+              set — the literal is folded at build time. */}
+          {__USING_FIXTURES__ && (
+            <p className="sample-note">
+              <Icon name="other" className="ico--sm" />
+              Sample campaigns — this build has no live data connected.
+            </p>
+          )}
         </div>
 
         {/* A crash inside the grid must not take the heading with it. */}

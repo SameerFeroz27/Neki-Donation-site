@@ -1,0 +1,41 @@
+# ---------------------------------------------------------------
+# Dependencies
+# ---------------------------------------------------------------
+node_modules/
+
+# ---------------------------------------------------------------
+# Build output
+# ---------------------------------------------------------------
+dist/
+dist-ssr/
+*.tsbuildinfo
+
+# ---------------------------------------------------------------
+# Local environment files
+# Only .env.example belongs in the repo. Everything else is specific to one
+# machine or one host, and the app reads its configuration at build time.
+# ---------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.local
+
+# ---------------------------------------------------------------
+# Logs and caches
+# ---------------------------------------------------------------
+*.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.vite/
+.cache/
+
+# ---------------------------------------------------------------
+# Editors and operating systems
+# ---------------------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

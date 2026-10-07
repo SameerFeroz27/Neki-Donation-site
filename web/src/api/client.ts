@@ -1,13 +1,11 @@
 /* =========================================================
    HTTP client.
 
-   One place that knows how to talk to the backend: base URL, headers,
-   timeouts/aborts and turning every failure into an ApiError with a message
-   that is safe to show a person.
+   One place that knows how to talk to the API: base URL, headers, aborts and
+   turning every failure into an ApiError with a message that is safe to show
+   a person.
    ========================================================= */
-
-/** Set VITE_API_BASE_URL for a deployed backend; empty means same-origin. */
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
+import { API_BASE_URL } from '../config'
 
 export class ApiError extends Error {
   /** HTTP status, or undefined when the request never reached the server. */
@@ -36,7 +34,7 @@ export async function apiGet<T>(
   let response: Response
 
   try {
-    response = await fetch(`${BASE_URL}${path}`, {
+    response = await fetch(`${API_BASE_URL}${path}`, {
       signal,
       headers: { Accept: 'application/json' },
     })
@@ -77,7 +75,7 @@ export async function apiPost<T>(
   let response: Response
 
   try {
-    response = await fetch(`${BASE_URL}${path}`, {
+    response = await fetch(`${API_BASE_URL}${path}`, {
       method: 'POST',
       signal,
       headers: {
