@@ -1,0 +1,276 @@
+/* =========================================================
+   Layout — the page shell: header, hero, sections, footer.
+   ========================================================= */
+.shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.main {
+  flex: 1;
+}
+
+/* ---------- logo mark (khatam star) ---------- */
+.logo {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 11px;
+  background: var(--g700);
+  color: var(--gold400);
+}
+.logo svg {
+  width: 19px;
+  height: 19px;
+}
+.logo--tiny {
+  width: 17px;
+  height: 17px;
+  border-radius: 6px;
+}
+.logo--tiny svg {
+  width: 11px;
+  height: 11px;
+}
+
+/* ---------- header ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(251, 249, 243, 0.88);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  height: var(--header-h);
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 800;
+  font-size: 1.12rem;
+}
+.nav {
+  display: flex;
+  gap: 1.6rem;
+  margin-left: auto;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.nav a:hover,
+.nav a[aria-current='page'] {
+  color: var(--g700);
+}
+@media (max-width: 820px) {
+  .nav {
+    display: none;
+  }
+}
+
+/* ---------- hero ---------- */
+.hero {
+  padding: clamp(36px, 6vw, 72px) 0 clamp(24px, 4vw, 44px);
+}
+.hero-inner {
+  max-width: 760px;
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--g700);
+  background: var(--gold50);
+  border: 1px solid var(--gold100);
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--r-pill);
+}
+.eyebrow .logo {
+  background: var(--gold500);
+  color: #fff;
+}
+.app-name {
+  font-size: clamp(3rem, 9vw, 5.4rem);
+  letter-spacing: -0.045em;
+  margin: 0.75rem 0 0.15rem;
+  color: var(--g800);
+}
+.tagline {
+  font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+  font-weight: 700;
+  color: var(--gold600);
+  margin-bottom: 1rem;
+}
+.lede {
+  color: var(--muted);
+  font-size: 1.02rem;
+  max-width: 62ch;
+}
+.lede strong {
+  color: var(--g700);
+}
+
+/* ---------- platform totals ----------
+   Three cards, the middle one highlighted: this is the first thing a visitor
+   sees, so the strongest hierarchy on the page lives here. The cards keep
+   their finished shape before any data exists, so nothing reflows when the
+   totals arrive and the hero never looks unfinished. */
+.stat-tile {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* centres the shorter cards against the taller featured one */
+  align-items: center;
+  gap: 1rem;
+  margin-top: clamp(1.6rem, 3vw, 2.2rem);
+}
+@media (max-width: 700px) {
+  .stat-tile {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+.stat-card {
+  display: grid;
+  justify-items: center;
+  gap: 0.55rem;
+  padding: 1.35rem 1rem;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh1);
+  /* The same timings as a campaign card, so the two rows move alike. */
+  transition:
+    transform 0.2s,
+    box-shadow 0.25s,
+    border-color 0.2s;
+}
+/* The lift the campaign cards give on hover, so the row feels alive in the
+   same way rather than sitting flat beside them. */
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sh2);
+  border-color: var(--g300);
+}
+/* Taller and darker, so it reads first. */
+.stat-card.is-featured {
+  padding-block: 1.75rem;
+  background-image: linear-gradient(160deg, var(--g700), var(--g800));
+  border-color: var(--g800);
+  box-shadow: 0 20px 44px -24px rgba(4, 33, 26, 0.85);
+}
+/* A pale green hairline would clash on the dark card, and its resting shadow
+   is already deeper than --sh2: it lifts onto gold instead. */
+.stat-card.is-featured:hover {
+  border-color: var(--gold500);
+  box-shadow: 0 28px 54px -24px rgba(4, 33, 26, 0.95);
+}
+@media (max-width: 700px) {
+  .stat-card.is-featured {
+    padding-block: 1.35rem;
+  }
+}
+
+.stat-badge {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--gold100);
+  color: var(--gold700);
+}
+.stat-badge .ico {
+  width: 23px;
+  height: 23px;
+  stroke-width: 1.7;
+}
+.stat-card.is-featured .stat-badge {
+  background: rgba(220, 187, 85, 0.2);
+  color: var(--gold400);
+}
+
+.stat-value {
+  font-size: clamp(1.55rem, 3.4vw, 2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  color: var(--g800);
+}
+.stat-card.is-featured .stat-value {
+  color: var(--gold400);
+}
+/* A figure that has not arrived yet. Deliberately faint, so it reads as an
+   absent value rather than as a small number — and it is a dash, so the shape
+   stays while the claim does not. The visible emptiness is announced instead
+   by one live region; this glyph itself is aria-hidden. */
+.stat-value.is-pending {
+  color: var(--g300);
+}
+.stat-card.is-featured .stat-value.is-pending {
+  color: rgba(220, 187, 85, 0.45);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.stat-card.is-featured .stat-label {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* ---------- sections ---------- */
+.section {
+  padding: clamp(40px, 6vw, 76px) 0;
+}
+.section--alt {
+  background: var(--g50);
+  border-block: 1px solid var(--line);
+}
+.section-head {
+  max-width: 56ch;
+  margin-bottom: 2rem;
+}
+.section h2 {
+  font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+  color: var(--g800);
+}
+.section-head p,
+.about p {
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+.about {
+  max-width: 62ch;
+}
+
+/* ---------- footer ---------- */
+.site-footer {
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  padding: 1.6rem 0;
+}
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.footer-inner p {
+  font-size: 0.83rem;
+  color: var(--muted);
+}

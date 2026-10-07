@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Neki — Website Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+/* =========================================================
+   Neki — website blueprint
+   A4 portrait. Same green/gold system as the prototype.
+   ========================================================= */
+:root{
+  --g900:#04211A; --g800:#073B2C; --g700:#0A4F3A; --g600:#0D6B4C;
+  --g500:#12855F; --g300:#7FB8A0; --g100:#DCEFE5; --g50:#EEF7F2;
+  --gold700:#8A6A1C; --gold600:#A8842A; --gold500:#C9A227; --gold400:#DCBB55;
+  --gold100:#F6ECD2; --gold50:#FBF6E7;
+  --ink:#08201A; --ink2:#1D3A31; --muted:#5D726A;
+  --line:#E4E0D2; --bg:#FBF9F3; --surface:#fff;
+  --font:'Plus Jakarta Sans',-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+@page{ size:A4; margin:16mm 15mm 14mm }
+@page:first{ margin:0 }
+
+html,body{margin:0;padding:0;background:var(--bg)}
+body{font-family:var(--font);color:var(--ink);font-size:10pt;line-height:1.55;
+  -webkit-font-smoothing:antialiased}
+*{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+h1,h2,h3,h4{margin:0;line-height:1.2;letter-spacing:-.02em;font-weight:800}
+p{margin:0 0 7pt}
+ul,ol{margin:0 0 7pt;padding-left:16pt}
+li{margin-bottom:3pt}
+code{font-family:'Consolas','SF Mono',monospace;font-size:8.6pt;background:var(--g50);
+  border:1px solid var(--g100);border-radius:4px;padding:0 3px;color:var(--g700)}
+b,strong{font-weight:800}
+.muted{color:var(--muted)}
+
+/* ---------- cover (full bleed page 1) ---------- */
+.cover{width:210mm;height:297mm;background:var(--g800);color:#fff;
+  position:relative;overflow:hidden;break-after:page;page-break-after:always}
+.cover::before{content:"";position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23C9A227' stroke-opacity='.16' stroke-width='1.1'%3E%3Cpath d='M32 4l28 28-28 28L4 32z'/%3E%3Cpath d='M32 14l18 18-18 18-18-18z'/%3E%3C/g%3E%3C/svg%3E")}
+.cover::after{content:"";position:absolute;right:-120px;top:-120px;width:460px;height:460px;
+  border-radius:50%;background:rgba(201,162,39,.10)}
+.cover-inner{position:relative;z-index:2;height:100%;padding:30mm 22mm;
+  display:flex;flex-direction:column}
+.cover .logo{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;
+  background:rgba(255,255,255,.10);border:1px solid rgba(201,162,39,.5);color:var(--gold400)}
+.cover .logo svg{width:28px;height:28px}
+.cover-kicker{margin-top:22px;font-size:8.4pt;font-weight:800;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gold400)}
+/* the global h1 rule (colour, border, page break) must not apply to the cover title */
+.cover h1{font-size:46pt;line-height:.98;letter-spacing:-.045em;margin:10px 0 0;
+  color:#fff;border-bottom:0;padding-bottom:0;
+  break-before:auto;page-break-before:auto}
+.cover-sub{font-size:14pt;font-weight:700;color:var(--gold400);margin-top:8px}
+.cover-lede{max-width:118mm;margin-top:16px;font-size:10.4pt;line-height:1.62;
+  color:rgba(255,255,255,.84)}
+.cover-rule{height:1px;width:120mm;background:rgba(201,162,39,.45);margin:26px 0 18px}
+.cover-meta{display:flex;gap:16mm}
+.cover-meta span{display:block;font-size:7.4pt;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:rgba(255,255,255,.6)}
+.cover-meta b{font-size:10.4pt}
+.cover-toc{margin-top:auto;border-left:2px solid rgba(201,162,39,.5);padding-left:16px}
+.cover-toc p{font-size:7.4pt;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.6);margin-bottom:8px}
+.cover-toc ol{margin:0;padding:0;list-style:none;
+  column-count:2;column-gap:14mm}
+.cover-toc li{font-size:9.4pt;font-weight:600;color:rgba(255,255,255,.9);padding:2.5px 0;
+  break-inside:avoid}
+
+/* ---------- sections ---------- */
+h1{font-size:19pt;color:var(--g800);break-before:page;page-break-before:always;
+  padding-bottom:7px;border-bottom:2px solid var(--gold500);margin-bottom:12px}
+h1 .num{color:var(--gold600);margin-right:8px}
+h2{font-size:12.4pt;color:var(--g700);margin:14px 0 6px;break-after:avoid}
+h3{font-size:10.6pt;color:var(--ink2);margin:10px 0 4px;break-after:avoid}
+.lead{font-size:10.4pt;color:var(--muted)}
+section{break-inside:auto}
+.brk{break-before:page;page-break-before:always}
+
+/* ---------- tables ---------- */
+table{width:100%;border-collapse:collapse;margin:8px 0 12px;font-size:9pt;
+  break-inside:avoid}
+th{background:var(--g50);color:var(--g700);text-align:left;font-weight:800;font-size:8.4pt;
+  text-transform:uppercase;letter-spacing:.05em;padding:6px 8px;border-bottom:1.5px solid var(--g300)}
+td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+tr{break-inside:avoid}
+tbody tr:nth-child(even){background:#FDFCF9}
+td.mono{font-family:'Consolas',monospace;font-size:8.4pt}
+
+/* ---------- cards / callouts ---------- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:7mm;break-inside:avoid}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm}
+.card{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--gold500);
+  border-radius:8px;padding:10px 12px;break-inside:avoid;margin-bottom:5mm}
+.card h3{margin-top:0}
+.card ul{margin-bottom:0}
+.note{background:var(--gold50);border:1px solid var(--gold100);border-radius:8px;
+  padding:9px 12px;font-size:9pt;color:#6B5520;break-inside:avoid;margin:8px 0}
+.note b{color:var(--gold700)}
+.rule{background:var(--g50);border:1px solid var(--g100);border-radius:8px;padding:9px 12px;
+  font-size:9pt;break-inside:avoid}
+
+/* ---------- flow ---------- */
+.flow{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:9px 0 12px;break-inside:avoid}
+.flow i{font-style:normal;background:var(--surface);border:1px solid var(--g300);color:var(--g700);
+  border-radius:999px;padding:4px 10px;font-size:8.6pt;font-weight:700}
+.flow i.done{background:var(--g700);border-color:var(--g700);color:#fff}
+.flow u{text-decoration:none;color:var(--gold600);font-weight:800;font-size:10pt}
+.flow small{color:var(--muted);font-size:8pt;width:100%;margin-top:2px}
+
+/* ---------- wireframes ---------- */
+.wf{border:1.4px solid var(--g300);border-radius:8px;padding:6px;background:var(--surface);
+  break-inside:avoid;font-size:7.6pt;color:var(--muted)}
+.wf .bar{background:var(--g50);border:1px dashed var(--g300);border-radius:4px;
+  padding:3px 6px;font-weight:700;color:var(--g700);text-align:center}
+.wf .blk{background:#F2F1EC;border:1px dashed #CFCBBE;border-radius:4px;padding:5px 6px;
+  text-align:center;margin-top:4px}
+.wf .row{display:flex;gap:4px;margin-top:4px}
+.wf .row .blk{flex:1;margin-top:0}
+.wf .arch{background:var(--g100);border:1px dashed var(--g300);border-radius:22px 22px 4px 4px;
+  padding:8px 6px;text-align:center;margin-top:4px;color:var(--g700)}
+.wf .sheet{border:1.4px solid var(--gold500);border-radius:8px;padding:6px;background:#fff;margin-top:4px}
+.wf .med{min-height:26px;display:flex;align-items:center;justify-content:center}
+
+/* ---------- swatches ---------- */
+.sw{display:inline-block;width:11px;height:11px;border-radius:3px;border:1px solid rgba(8,32,26,.15);
+  vertical-align:-1px;margin-right:5px}
+
+/* ---------- misc ---------- */
+.tree{font-family:'Consolas',monospace;font-size:8.4pt;line-height:1.5;background:var(--g50);
+  border:1px solid var(--g100);border-radius:8px;padding:10px 12px;white-space:pre;
+  break-inside:avoid;color:var(--ink2)}
+.kv{display:grid;grid-template-columns:34mm 1fr;gap:3px 8px;font-size:9pt;break-inside:avoid}
+.kv b{color:var(--g700)}
+footer.doc{margin-top:14px;padding-top:8px;border-top:1px solid var(--line);
+  font-size:8pt;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<!-- ================= COVER ================= -->
+<div class="cover">
+  <div class="cover-inner">
+    <span class="logo">
+      <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4">
+        <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+        <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+      </svg>
+    </span>
+    <p class="cover-kicker">Website blueprint</p>
+    <h1>Neki</h1>
+    <p class="cover-sub">Donation website — build plan</p>
+    <p class="cover-lede">
+      A single-page donation site: the app name on top, what the app does below it, then the
+      cases you can donate to. Each case opens a payment sheet with two ways to pay — Request
+      to Pay through Raast, or credit / debit card. This document is the blueprint: screens,
+      flows, design system, data, payments and the build phases.
+    </p>
+    <div class="cover-rule"></div>
+    <div class="cover-meta">
+      <div><span>Prepared for</span><b>Arif bhai</b></div>
+      <div><span>Prepared by</span><b>Sameer Mukhida</b></div>
+      <div><span>Date</span><b>October 2026</b></div>
+    </div>
+    <div class="cover-toc">
+      <p>Contents</p>
+      <ol>
+        <li>1 &nbsp; Overview &amp; goals</li>
+        <li>2 &nbsp; Sitemap &amp; screens</li>
+        <li>3 &nbsp; User flows</li>
+        <li>4 &nbsp; Screen specifications</li>
+        <li>5 &nbsp; Components &amp; file structure</li>
+        <li>6 &nbsp; Design system</li>
+        <li>7 &nbsp; Data model</li>
+        <li>8 &nbsp; Payments blueprint</li>
+        <li>9 &nbsp; Validation rules</li>
+        <li>10 &nbsp; Technology stack</li>
+        <li>11 &nbsp; Build phases</li>
+        <li>12 &nbsp; Assumptions &amp; decisions needed</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 1. OVERVIEW ================= -->
+<h1><span class="num">1</span>Overview &amp; goals</h1>
+
+<p class="lead">
+  Neki is a donation website for verified cases. A visitor lands on one page, reads what the
+  app does, and scrolls through the cases they can give to. A <b>Donate Now</b> button on any
+  case opens a payment sheet, and the sheet offers exactly two ways to pay: Request to Pay
+  (Raast) and credit / debit card.
+</p>
+
+<h2>The brief, restated</h2>
+<div class="rule">
+  App name on top &rarr; details of the app below it &rarr; the cases you can donate to &rarr;
+  a <b>Donate Now</b> button under each case &rarr; a payment sheet that opens &rarr; two
+  transaction methods: <b>Request to Pay</b> and <b>Credit / Debit Card</b>.
+</div>
+
+<h2>What the product has to achieve</h2>
+<div class="grid3">
+  <div class="card">
+    <h3>Trust</h3>
+    <ul>
+      <li>Every case is verified before it is listed</li>
+      <li>Progress, goal and days left shown on the card itself</li>
+      <li>Funds released in stages against bills and photos</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Speed</h3>
+    <ul>
+      <li>No account needed to donate</li>
+      <li>Amount &rarr; method &rarr; done in three screens</li>
+      <li>Request to Pay works from the bank app the donor already has</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Reach</h3>
+    <ul>
+      <li>Two payment rails so nobody is turned away</li>
+      <li>Raast for local donors, card for overseas and larger gifts</li>
+      <li>Monthly giving for repeat donors</li>
+    </ul>
+  </div>
+</div>
+
+<h2>Audience</h2>
+<div class="kv">
+  <b>Primary</b><span>Individual donors in Pakistan, giving PKR 500 &ndash; 50,000, often on a phone</span>
+  <b>Secondary</b><span>Overseas Pakistanis giving by card, and repeat monthly donors</span>
+  <b>Not in phase 1</b><span>Corporate giving, zakat calculation tools, volunteer sign-up, public donor profiles</span>
+</div>
+
+<h2>Success measures</h2>
+<table>
+  <tr><th>Measure</th><th>Target</th><th>Why it matters</th></tr>
+  <tr><td>Donation sheet completion</td><td>&gt; 70% of opened sheets</td><td>The two-method design exists to remove drop-off</td></tr>
+  <tr><td>Mobile share of donations</td><td>&gt; 75%</td><td>Drives the mobile-first layout decision</td></tr>
+  <tr><td>Case funding rate</td><td>&gt; 80% of listed cases reach goal</td><td>Nothing damages trust like a case that stalls</td></tr>
+  <tr><td>Repeat donors</td><td>&gt; 25% give a second time</td><td>Monthly giving and receipts are built for this</td></tr>
+</table>
+
+<div class="note">
+  <b>Scope note.</b> The frontend prototype for all six screens is already built and click-tested.
+  This blueprint describes that design plus the work required to turn it into a live product.
+</div>
+
+<!-- ================= 2. SITEMAP ================= -->
+<h1><span class="num">2</span>Sitemap &amp; screens</h1>
+
+<p class="lead">
+  One public page plus a modal flow. The modal flow is deliberately not a set of routes &mdash;
+  keeping the donor on the case list means the back button and the browser history stay clean,
+  and an interrupted donation can be resumed without losing the page position.
+</p>
+
+<h2>Page inventory</h2>
+<table>
+  <tr><th style="width:26mm">Screen</th><th style="width:30mm">Type</th><th>Purpose</th><th style="width:34mm">Key elements</th></tr>
+  <tr>
+    <td><b>S1 Home</b></td><td>Page, <code>/</code></td>
+    <td>Say what the app is and show the cases</td>
+    <td>Header, hero (name + details), stats, case grid, footer</td>
+  </tr>
+  <tr>
+    <td><b>S2 Amount</b></td><td>Modal step 1</td>
+    <td>Pick how much and how often</td>
+    <td>One-time / monthly, four presets, custom amount, fee checkbox</td>
+  </tr>
+  <tr>
+    <td><b>S3 Method</b></td><td>Modal step 2</td>
+    <td>Choose how to pay</td>
+    <td>Selected-case strip, Request to Pay card, Card card</td>
+  </tr>
+  <tr>
+    <td><b>S4 Raast</b></td><td>Modal step 2a</td>
+    <td>Collect the Raast ID and send the request</td>
+    <td>Mobile ID / IBAN toggle, ID input, send button</td>
+  </tr>
+  <tr>
+    <td><b>S5 Card</b></td><td>Modal step 2b</td>
+    <td>Take a card payment</td>
+    <td>Summary pane, PKR/USD, card fields, pay button</td>
+  </tr>
+  <tr>
+    <td><b>S6 Receipt</b></td><td>Modal step 3</td>
+    <td>Confirm and hand over a receipt ID</td>
+    <td>Success mark, receipt table, copy ID, done</td>
+  </tr>
+</table>
+
+<h2>Flow at a glance</h2>
+<div class="flow">
+  <i>Home</i><u>&rarr;</u><i>Case card</i><u>&rarr;</u><i>Donate Now</i><u>&rarr;</u>
+  <i>Amount</i><u>&rarr;</u><i>Method</i><u>&rarr;</u>
+  <i>Raast</i>&nbsp;or&nbsp;<i>Card</i><u>&rarr;</u><i>Receipt</i>
+</div>
+
+<h2>Planned for later phases</h2>
+<table>
+  <tr><th style="width:38mm">Screen</th><th>Purpose</th><th style="width:22mm">Phase</th></tr>
+  <tr><td>Case detail <code>/case/:id</code></td><td>Story, photos, documents, payout updates, share links</td><td>2</td></tr>
+  <tr><td>Donor account <code>/me</code></td><td>Giving history, monthly plan, downloadable receipts</td><td>4</td></tr>
+  <tr><td>Admin <code>/admin</code></td><td>Create a case, verify it, release funds in stages</td><td>5</td></tr>
+  <tr><td>Transparency <code>/impact</code></td><td>Where the money went, published totals</td><td>6</td></tr>
+</table>
+
+<!-- ================= 3. USER FLOWS ================= -->
+<h1><span class="num">3</span>User flows</h1>
+
+<h2>Flow A &mdash; Request to Pay (Raast)</h2>
+<p class="muted">The donor never types card details. The money moves inside their own bank app, approved with their PIN.</p>
+<table>
+  <tr><th style="width:8mm">#</th><th style="width:52mm">Donor sees</th><th>System does</th></tr>
+  <tr><td>1</td><td>Home page with cases</td><td>Serves the case list, cached for a minute</td></tr>
+  <tr><td>2</td><td>Taps <b>Donate Now</b> on a case</td><td>Opens the sheet on the amount step with that case attached</td></tr>
+  <tr><td>3</td><td>Picks an amount and one-time or monthly</td><td>Recomputes the total, including the optional 2% fee cover</td></tr>
+  <tr><td>4</td><td>Chooses <b>Request to Pay</b></td><td>Creates a pending donation with a unique reference</td></tr>
+  <tr><td>5</td><td>Switches Mobile ID / IBAN and enters the ID</td><td>Validates the format locally, then on the server</td></tr>
+  <tr><td>6</td><td>Taps <b>Send request</b></td><td>Asks the payment provider to raise a Raast request against that ID</td></tr>
+  <tr><td>7</td><td>Notification in their bank app</td><td>Waits for the provider webhook; shows "waiting for approval"</td></tr>
+  <tr><td>8</td><td>Approves with their PIN</td><td>Webhook arrives: marks the donation paid, allocates it to the case</td></tr>
+  <tr><td>9</td><td>Receipt with a receipt ID, and an email</td><td>Issues the receipt, emails it, updates the case progress</td></tr>
+</table>
+<div class="note">
+  <b>Expiry.</b> A request that is not approved within five minutes is marked expired. The donor
+  can resend it, and no money has moved. Expired requests must never appear as failed donations.
+</div>
+
+<h2>Flow B &mdash; Credit / Debit card</h2>
+<table>
+  <tr><th style="width:8mm">#</th><th style="width:52mm">Donor sees</th><th>System does</th></tr>
+  <tr><td>1&ndash;3</td><td>Same as Flow A, up to choosing the amount</td><td>Same</td></tr>
+  <tr><td>4</td><td>Chooses <b>Credit / Debit Card</b></td><td>Loads the card checkout with the amount and case shown</td></tr>
+  <tr><td>5</td><td>Optionally switches the display currency to USD</td><td>Converts for display only; the charge stays in PKR</td></tr>
+  <tr><td>6</td><td>Enters email, card number, expiry, CVC, name, country</td><td>Card fields are the provider's hosted fields &mdash; our server never sees the number</td></tr>
+  <tr><td>7</td><td>Taps <b>Donate</b></td><td>Provider tokenises the card and may show a 3-D Secure challenge</td></tr>
+  <tr><td>8</td><td>Bank challenge screen, if required</td><td>Waits for the authorisation result</td></tr>
+  <tr><td>9</td><td>Receipt, plus an emailed copy</td><td>Records the payment, issues the receipt, updates progress</td></tr>
+</table>
+<div class="note">
+  <b>Declines.</b> A declined card keeps the donor on the card step with the reason shown, and
+  the entered details intact except the CVC. Never send them back to the start.
+</div>
+
+<!-- ================= 4. SCREEN SPECS ================= -->
+<h1><span class="num">4</span>Screen specifications</h1>
+
+<h2>S1 &mdash; Home</h2>
+<div class="grid2">
+  <div>
+    <h3>Structure, top to bottom</h3>
+    <ol>
+      <li>Header: logo mark, wordmark, two links, <b>Donate Now</b> button, sticky on scroll</li>
+      <li>Hero: app name at the largest size, one-line tagline, a paragraph of app details, three stats</li>
+      <li>Case section: heading, then the case grid</li>
+      <li>About: how funds are held and released, the 0% platform fee</li>
+      <li>Footer</li>
+    </ol>
+  </div>
+  <div class="wf">
+    <div class="bar">Header — logo · links · Donate Now</div>
+    <div class="blk med" style="height:26px">App name (largest text)</div>
+    <div class="blk med">Tagline · app details · three stats</div>
+    <div class="blk">"Cases you can donate to"</div>
+    <div class="row">
+      <div class="blk">Case card</div>
+      <div class="blk">Case card</div>
+      <div class="blk">Case card</div>
+    </div>
+    <div class="blk" style="margin-top:4px">Footer</div>
+  </div>
+</div>
+
+<h3>Case card anatomy</h3>
+<div class="grid2">
+  <div>
+    <ul>
+      <li><b>Arch media block</b> &mdash; mihrab-shaped panel in green with a category tag</li>
+      <li><b>Title</b> &mdash; the case in one line</li>
+      <li><b>Description</b> &mdash; two lines on the card, full text on the detail page</li>
+      <li><b>Progress</b> &mdash; raised amount, percentage, bar</li>
+      <li><b>Footer row</b> &mdash; goal and days left</li>
+      <li><b>Donate Now</b> &mdash; full-width button, opens the sheet</li>
+    </ul>
+  </div>
+  <div class="wf">
+    <div class="arch">Arch — category tag + icon</div>
+    <div class="blk" style="text-align:left">Case title</div>
+    <div class="blk" style="text-align:left">Description, two lines</div>
+    <div class="blk" style="text-align:left">Raised PKR 620,000 &nbsp;·&nbsp; 73%</div>
+    <div class="blk" style="text-align:left;background:var(--gold100);border-color:var(--gold400)">Progress bar</div>
+    <div class="blk" style="text-align:left">Goal PKR 850,000 &nbsp;·&nbsp; 11 days left</div>
+    <div class="bar" style="margin-top:4px">Donate Now</div>
+  </div>
+</div>
+
+<h2>S2 &mdash; Amount</h2>
+<div class="grid2">
+  <div>
+    <ul>
+      <li>One-time / monthly segmented control, one-time default</li>
+      <li>Four preset amounts, plus a free-text amount field</li>
+      <li>Optional 2% fee cover, ticked by default</li>
+      <li>Live line: what the case receives</li>
+      <li><b>Continue to payment</b>, disabled while the amount is zero</li>
+    </ul>
+  </div>
+  <div class="wf">
+    <div class="bar">Sheet header — logo · title · close</div>
+    <div class="sheet">
+      <div class="blk">One-time &nbsp;|&nbsp; Monthly</div>
+      <div class="row">
+        <div class="blk">500</div><div class="blk">1,000</div>
+        <div class="blk">2,000</div><div class="blk">5,000</div>
+      </div>
+      <div class="blk" style="text-align:left">Custom amount</div>
+      <div class="blk" style="text-align:left">☑ Add 2% to cover processing</div>
+      <div class="bar">Continue to payment</div>
+    </div>
+  </div>
+</div>
+
+<h2>S3 &mdash; Choose payment method</h2>
+<div class="grid2">
+  <div>
+    <ul>
+      <li><b>Selected case strip</b>: case name pill, one-time pill, and the total on the right with the fee-cover badge</li>
+      <li>Two method cards side by side, stacking on mobile</li>
+      <li>Each card: logo tile, title, one line of explanation, a small trust pill at the foot</li>
+      <li><b>Change amount</b> link back to S2</li>
+    </ul>
+  </div>
+  <div class="wf">
+    <div class="bar">Sheet header</div>
+    <div class="sheet">
+      <div class="row">
+        <div class="blk" style="text-align:left">Selected case · One-time</div>
+        <div class="blk">Total donation<br><b>PKR 2,040</b></div>
+      </div>
+      <div class="row">
+        <div class="blk" style="text-align:left">Raast mark<br>Request to Pay<br><span style="font-size:7pt">Powered by Raast</span></div>
+        <div class="blk" style="text-align:left">Card icon<br>Credit / Debit Card<br><span style="font-size:7pt">Secure checkout</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>S4 &mdash; Request to Pay</h2>
+<div class="grid2">
+  <div>
+    <ul>
+      <li>Same selected case strip, labelled <i>Request to Pay</i></li>
+      <li>Detail row: Raast mark, heading, the amount, provider pill</li>
+      <li><b>Mobile ID / IBAN</b> toggle &mdash; switching changes the placeholder, the hint and the validation</li>
+      <li><b>Send request</b>, then a waiting state until the webhook arrives</li>
+    </ul>
+  </div>
+  <div class="wf">
+    <div class="bar">Sheet header</div>
+    <div class="sheet">
+      <div class="row">
+        <div class="blk" style="text-align:left">Selected case</div>
+        <div class="blk">PKR 2,040</div>
+      </div>
+      <div class="blk" style="text-align:left">Raast payment details</div>
+      <div class="row">
+        <div class="bar" style="flex:1">Raast Mobile ID</div>
+        <div class="blk" style="flex:1">IBAN</div>
+      </div>
+      <div class="blk" style="text-align:left">03xxxxxxxxx</div>
+      <div class="bar">Send request</div>
+    </div>
+  </div>
+</div>
+
+<h2>S5 &mdash; Credit / Debit Card</h2>
+<div class="grid2">
+  <div>
+    <ul>
+      <li>Wider sheet, two panes: summary on the left, form on the right</li>
+      <li>Left: donor sees the case, the amount, PKR / USD display toggle, the rate line, and a line item repeating the case</li>
+      <li>Right: email, then one grouped card box &mdash; number, expiry, CVC &mdash; then cardholder name and country</li>
+      <li>Card fields are the provider's hosted fields, so they render inside their iframe</li>
+      <li>Single <b>Donate</b> button at the foot; stacks to one column on mobile</li>
+    </ul>
+  </div>
+  <div class="wf">
+    <div class="bar">Sheet header</div>
+    <div class="sheet">
+      <div class="row">
+        <div class="blk" style="text-align:left">Case<br><b>PKR 2,040</b><br>PKR | USD<br>Line item</div>
+        <div class="blk" style="text-align:left">Contact information<br>Payment method<br>Card number · MM/YY · CVC<br>Cardholder name · Country</div>
+      </div>
+      <div class="bar">Donate PKR 2,040</div>
+    </div>
+  </div>
+</div>
+
+<h2>S6 &mdash; Receipt</h2>
+<div class="grid2">
+  <div>
+    <ul>
+      <li>Success mark, then a one-line confirmation of the amount</li>
+      <li>Receipt table: case, amount, method, frequency, receipt ID</li>
+      <li><b>Copy receipt ID</b>, and a <b>Done</b> button that closes the sheet</li>
+      <li>The same receipt is emailed; for cards a provider receipt also goes out</li>
+    </ul>
+  </div>
+  <div class="wf">
+    <div class="bar">Sheet header</div>
+    <div class="sheet">
+      <div class="blk med" style="height:30px">✓ Success mark</div>
+      <div class="blk" style="text-align:left">Case · Amount · Method · Frequency · Receipt ID</div>
+      <div class="bar">Copy receipt ID</div>
+      <div class="blk">Done</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 5. COMPONENTS ================= -->
+<h1><span class="num">5</span>Components &amp; file structure</h1>
+
+<h2>Component tree</h2>
+<div class="tree">App
+├── SiteHeader            logo · nav · Donate Now
+├── HomePage
+│   ├── Hero              app name · tagline · details · StatsRow
+│   ├── CaseSection
+│   │   ├── SectionHead
+│   │   └── CaseGrid  →  CaseCard ( × n )
+│   │        ├── CaseArch        mihrab panel + category tag
+│   │        ├── ProgressBar
+│   │        └── DonateButton    opens the sheet
+│   └── AboutBlock
+├── SiteFooter
+└── DonationSheet         one modal, six internal steps
+    ├── SheetHeader       logo · title · close
+    ├── SheetStep.Amount      SegmentedControl · AmountPresets · AmountInput · FeeCheck
+    ├── SheetStep.Method      SelectedCaseStrip · MethodCard × 2
+    ├── SheetStep.Raast       ModeToggle · RaastIdInput · SendRequestButton
+    ├── SheetStep.Card        CheckoutSummaryPane · CardFormPane
+    └── SheetStep.Receipt     SuccessMark · ReceiptTable · CopyButton
+        └── shared: Button · Pill · Field · ErrorText</div>
+
+<h2>File structure</h2>
+<table>
+  <tr><th style="width:38mm">This prototype</th><th>When it becomes a real app</th></tr>
+  <tr>
+    <td class="mono">index.html<br>styles.css<br>app.js</td>
+    <td class="mono">
+      src/<br>
+      &nbsp;&nbsp;main.tsx, App.tsx<br>
+      &nbsp;&nbsp;routes/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HomePage, CaseDetail, DonorAccount<br>
+      &nbsp;&nbsp;components/&nbsp;&nbsp;&nbsp;sheet/, cases/, ui/<br>
+      &nbsp;&nbsp;lib/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;api.ts, money.ts, validation.ts<br>
+      &nbsp;&nbsp;styles/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tokens.css, app.css<br>
+      &nbsp;&nbsp;config/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;site.ts&nbsp;&nbsp;(currency, presets, fee, rate)<br>
+      server/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;routes/, webhooks/, db/
+    </td>
+  </tr>
+</table>
+<p class="muted">
+  The prototype keeps currency, presets, the fee and the case list in one config block and one
+  array, so the same values move straight across into <code>config/site.ts</code> and the database seed.
+</p>
+
+<!-- ================= 6. DESIGN SYSTEM ================= -->
+<h1><span class="num">6</span>Design system</h1>
+
+<p class="lead">
+  Two colours only &mdash; deep green and gold on an ivory paper background. Green carries trust
+  and the money side; gold carries generosity and draws the eye to progress and calls to action.
+  Two Islamic details are used sparingly: a <i>khatam</i> eight-point star tiled behind the page at
+  very low opacity, and a <i>mihrab</i> arch on each case card.
+</p>
+
+<h2>Colour tokens</h2>
+<table>
+  <tr><th style="width:34mm">Token</th><th style="width:26mm">Hex</th><th>Used for</th></tr>
+  <tr><td class="mono">--g800</td><td><span class="sw" style="background:#073B2C"></span>#073B2C</td><td>Headings, the cover, hover on primary buttons</td></tr>
+  <tr><td class="mono">--g700</td><td><span class="sw" style="background:#0A4F3A"></span>#0A4F3A</td><td>Primary buttons, the wordmark tile, body emphasis</td></tr>
+  <tr><td class="mono">--g600 / --g500</td><td><span class="sw" style="background:#0D6B4C"></span>#0D6B4C</td><td>The arch gradient, focus rings</td></tr>
+  <tr><td class="mono">--gold500</td><td><span class="sw" style="background:#C9A227"></span>#C9A227</td><td>Category tags, progress bars, the tagline, rules</td></tr>
+  <tr><td class="mono">--gold100</td><td><span class="sw" style="background:#F6ECD2"></span>#F6ECD2</td><td>Fee-cover badge, small warm highlights</td></tr>
+  <tr><td class="mono">--g50</td><td><span class="sw" style="background:#EEF7F2"></span>#EEF7F2</td><td>Inset panel fills, selected states, provider pills</td></tr>
+  <tr><td class="mono">--bg</td><td><span class="sw" style="background:#FBF9F3"></span>#FBF9F3</td><td>Page background (ivory)</td></tr>
+  <tr><td class="mono">--line</td><td><span class="sw" style="background:#E4E0D2"></span>#E4E0D2</td><td>All borders and dividers</td></tr>
+  <tr><td class="mono">--muted</td><td><span class="sw" style="background:#5D726A"></span>#5D726A</td><td>Secondary text and hints</td></tr>
+</table>
+<div class="note">
+  <b>Rule.</b> No other hue appears anywhere, including the payment brand marks. Visa and
+  Mastercard are drawn as monochrome marks in green, and the Raast mark uses green and gold.
+  This keeps the page calm and on-brand; if brand guidelines require the true colours, that is a
+  deliberate exception to record.
+</div>
+
+<h2>Typography</h2>
+<table>
+  <tr><th style="width:34mm">Role</th><th style="width:30mm">Size / weight</th><th>Notes</th></tr>
+  <tr><td>App name</td><td>48&ndash;86px, 800</td><td>Tight letter-spacing; the largest thing on the page</td></tr>
+  <tr><td>Section heading</td><td>24&ndash;34px, 800</td><td>Green, tight tracking</td></tr>
+  <tr><td>Case title</td><td>17px, 800</td><td>One line where possible</td></tr>
+  <tr><td>Body</td><td>14&ndash;16px, 400</td><td>Line height 1.55, secondary text in <code>--muted</code></td></tr>
+  <tr><td>Label / kicker</td><td>11&ndash;12px, 800, uppercase</td><td>Letter-spacing .09em</td></tr>
+  <tr><td>Amount in sheet</td><td>26px, 800</td><td>Tabular figures so digits do not jump</td></tr>
+</table>
+<p class="muted">One family, Plus Jakarta Sans, in five weights. System sans-serif as the fallback.</p>
+
+<h2>Shape, spacing and depth</h2>
+<div class="kv">
+  <b>Radii</b><span>Pills 999px · inputs and buttons 14px · cards 20px · the sheet 28px</span>
+  <b>Spacing</b><span>4px base &mdash; 8 / 12 / 16 / 24 / 40 / 64</span>
+  <b>Shadows</b><span>Three steps only: resting cards, raised cards, the modal sheet</span>
+  <b>Motion</b><span>150&ndash;280ms ease-out. Progress bars animate once on scroll. Honours <code>prefers-reduced-motion</code></span>
+  <b>Signature</b><span>Mihrab arch on case media (radius 100px on the top corners) · khatam star tiled at 5.5% opacity</span>
+</div>
+
+<h2>Accessibility</h2>
+<ul>
+  <li>Body text on ivory is at least 7:1 contrast; the muted grey is checked against every background it sits on</li>
+  <li>The sheet traps focus while open, closes on Escape and on a backdrop click, and returns focus to the button that opened it</li>
+  <li>Every field has a real label; errors are text, not colour alone, and are announced</li>
+  <li>Tap targets are at least 44px; the sheet is fully usable at 360px wide</li>
+  <li>Progress bars carry the numbers as text, so nothing depends on reading a bar</li>
+</ul>
+
+<!-- ================= 7. DATA MODEL ================= -->
+<h1><span class="num">7</span>Data model</h1>
+
+<p class="lead">Four entities carry the whole donation flow. Amounts are stored as integers in the smallest unit to avoid rounding errors.</p>
+
+<h2>Case</h2>
+<div class="tree">{
+  id:          "heart-zainab",
+  title:       "Heart surgery for Zainab, 6",
+  category:    "Health",            // Health · Food · Water · Education · Emergency · Seasonal
+  summary:     "A hole in the heart needs urgent repair…",
+  story:       "…full text for the detail page…",
+  goalAmount:  85000000,            // PKR 850,000 in paisa
+  raisedAmount:62000000,
+  currency:    "PKR",
+  deadline:    "2026-10-17",
+  verifiedAt:  "2026-09-28",
+  status:      "active",            // draft · active · funded · closed
+  media:       [ { type:"photo", url:"…", caption:"…" } ],
+  payouts:     [ { amount:…, releasedAt:…, receipts:[…] } ]
+}</div>
+
+<h2>Donation</h2>
+<div class="tree">{
+  id:          "don_8f3k2",
+  caseId:      "heart-zainab",
+  amount:      200000,              // PKR 2,000 given to the case
+  feeCovered:  true,                // donor also paid the 2% processing fee
+  totalCharged:204000,
+  frequency:   "once",              // once · monthly
+  method:      "raast",             // raast · card
+  status:      "pending",           // pending · awaiting_approval · paid · expired · failed · refunded
+  donorEmail:  "…",                 // required for cards, optional for Raast
+  reference:   "NK-7F2QA9KD",
+  createdAt:   "2026-10-06T11:04:00Z",
+  paidAt:      null
+}</div>
+
+<h2>Payment attempt and receipt</h2>
+<div class="tree">PaymentAttempt {
+  id, donationId,
+  provider:     "psp_name",
+  providerRef:  "…",                // the provider's own id, for reconciliation
+  rail:         "raast" | "card",
+  raastId:      "03XXXXXXXXX",      // Mobile ID or IBAN, never stored in full for cards
+  cardLast4:    "4242",             // only ever the last four
+  cardBrand:    "visa",
+  status, errorCode, rawWebhook[]
+}
+
+Receipt {
+  id: "NK-7F2QA9KD", donationId, caseId,
+  amount, currency, method, issuedAt, pdfUrl
+}</div>
+
+<div class="note">
+  <b>Never stored.</b> Full card numbers, CVCs, Raast PINs or bank credentials. Card data lives
+  only inside the payment provider; we keep the last four digits and the brand so the receipt can
+  say "Visa &middot;&middot;&middot;&middot; 4242".
+</div>
+
+<h2>Case progress</h2>
+<p class="muted">
+  <code>raisedAmount</code> is derived from paid donations, not written by hand, so the progress
+  bar can never disagree with the money received. A nightly job reconciles our totals against the
+  provider's settlement report and flags any gap.
+</p>
+
+<!-- ================= 8. PAYMENTS ================= -->
+<h1><span class="num">8</span>Payments blueprint</h1>
+
+<h2>Rail 1 &mdash; Request to Pay over Raast</h2>
+<table>
+  <tr><th style="width:34mm">Step</th><th>Detail</th></tr>
+  <tr><td>Donor enters ID</td><td>Raast Mobile ID (11 digits, <code>03XXXXXXXXX</code>) or an IBAN (24 characters, starting <code>PK</code>). Format is checked in the browser, then again on the server.</td></tr>
+  <tr><td>We create a donation</td><td>Status <code>pending</code>, with a unique reference and the amount locked in.</td></tr>
+  <tr><td>We ask the provider</td><td>Server-to-server call to raise a request-to-pay against that Raast ID. The provider holds the relationship with the bank.</td></tr>
+  <tr><td>Donor approves</td><td>A notification appears in their bank app; they approve with their PIN. No PIN or credential ever reaches us.</td></tr>
+  <tr><td>Webhook confirms</td><td>The provider calls our webhook. Signature is verified, the event is de-duplicated by its id, and the donation moves to <code>paid</code>.</td></tr>
+  <tr><td>Receipt and progress</td><td>Receipt issued and emailed; the case progress updates from the paid total.</td></tr>
+  <tr><td>Expiry</td><td>No approval within five minutes &rarr; <code>expired</code>. The donor may resend. Expired is not a failure.</td></tr>
+</table>
+
+<h2>Rail 2 &mdash; Cards</h2>
+<table>
+  <tr><th style="width:34mm">Step</th><th>Detail</th></tr>
+  <tr><td>Hosted fields</td><td>The card number, expiry and CVC are entered into fields rendered by the provider inside iframes. They never touch our DOM or our server.</td></tr>
+  <tr><td>Tokenise</td><td>The provider returns a token; we send the token, the amount and the donor's email to create the charge.</td></tr>
+  <tr><td>3-D Secure</td><td>The bank may challenge the donor. We show the provider's challenge and wait for the result.</td></tr>
+  <tr><td>Result</td><td><code>paid</code>, or <code>failed</code> with a decline reason shown on the card step with the details preserved.</td></tr>
+  <tr><td>Saved cards</td><td>Only the provider's token is stored against the donor, never a number.</td></tr>
+</table>
+
+<h2>Rules that apply to both rails</h2>
+<ul>
+  <li><b>Server-side amounts.</b> The amount is recalculated on the server from the donation record; the browser's figure is never trusted.</li>
+  <li><b>Idempotency.</b> Every create-payment call carries a key, so a double tap or a retry cannot charge twice.</li>
+  <li><b>Webhooks are the truth.</b> A donation only becomes <code>paid</code> from a verified webhook, never from a browser redirect.</li>
+  <li><b>Out-of-order events.</b> Events are stored raw and applied by state machine, so a late event cannot move a paid donation backwards.</li>
+  <li><b>Refunds.</b> Available for 24 hours if a case closes early, and for a duplicate charge at any time.</li>
+  <li><b>Reconciliation.</b> A daily job compares our paid totals against the provider settlement report and alerts on any mismatch.</li>
+  <li><b>PCI scope.</b> With hosted fields and tokens, the site stays out of card-data scope. This must stay true as features are added &mdash; it is the single easiest thing to break.</li>
+</ul>
+
+<div class="note">
+  <b>Provider choice.</b> The Raast rail needs a provider that supports request-to-pay and settles
+  to a local account. Which provider we use affects fees, settlement time and the exact webhook
+  contract, so this is a decision for Arif bhai &mdash; see section 12.
+</div>
+
+<!-- ================= 9. VALIDATION ================= -->
+<h1><span class="num">9</span>Validation rules</h1>
+
+<table>
+  <tr><th style="width:32mm">Field</th><th style="width:44mm">Rule</th><th>Message shown</th></tr>
+  <tr><td>Amount</td><td>Whole number, minimum PKR 100, maximum PKR 1,000,000</td><td>Enter an amount between PKR 100 and PKR 1,000,000</td></tr>
+  <tr><td>Raast Mobile ID</td><td><code>03</code> followed by 9 digits</td><td>Enter a valid 11-digit Raast Mobile ID (03XXXXXXXXX)</td></tr>
+  <tr><td>IBAN</td><td><code>PK</code> + 2 check digits + 4-letter bank code + 16 digits (24 characters)</td><td>Enter a valid 24-character IBAN starting with PK</td></tr>
+  <tr><td>Card number</td><td>16 digits (15 for Amex), must pass the Luhn check</td><td>That card number looks invalid</td></tr>
+  <tr><td>Card expiry</td><td><code>MM/YY</code>, not in the past</td><td>This card has expired</td></tr>
+  <tr><td>CVC</td><td>3 digits, or 4 for Amex</td><td>CVC must be 3 digits</td></tr>
+  <tr><td>Cardholder name</td><td>At least 3 characters</td><td>Enter the full name printed on the card</td></tr>
+  <tr><td>Email</td><td>Required for card payments; optional for Raast</td><td>Enter a valid email for your receipt</td></tr>
+</table>
+
+<h3>Behaviour</h3>
+<ul>
+  <li>Errors appear under the field that caused them, as text with an icon or border change, never colour alone</li>
+  <li>The form is validation-neutral while typing and validates on submit; the card number and expiry reformat as you type</li>
+  <li>Server-side validation repeats every rule above &mdash; the browser check is for speed, not security</li>
+  <li>Rate limiting: five payment attempts per Raast ID and per IP per ten minutes</li>
+</ul>
+
+<!-- ================= 10. TECH STACK ================= -->
+<h1><span class="num">10</span>Technology stack</h1>
+
+<h2>What the prototype uses today</h2>
+<table>
+  <tr><th style="width:34mm">Layer</th><th>Choice</th><th style="width:44mm">Why</th></tr>
+  <tr><td>Markup</td><td>Plain HTML5, one page</td><td>Nothing to install, opens by double-clicking</td></tr>
+  <tr><td>Styling</td><td>Hand-written CSS with custom properties, grid and flexbox</td><td>The whole theme is one token block; no build step</td></tr>
+  <tr><td>Behaviour</td><td>Vanilla JavaScript, no framework</td><td>The sheet is one state machine; a framework adds weight with no benefit at this size</td></tr>
+  <tr><td>Data</td><td>A <code>CASES</code> array in the page</td><td>Sample content only</td></tr>
+  <tr><td>Payments</td><td>Simulated</td><td>No real money moves in a prototype</td></tr>
+</table>
+
+<h2>What the live product should use</h2>
+<table>
+  <tr><th style="width:34mm">Layer</th><th>Choice</th><th style="width:44mm">Why</th></tr>
+  <tr><td>Framework</td><td>React with TypeScript, built by Vite</td><td>Typed money handling, and the sheet becomes a state machine instead of hand-written DOM updates</td></tr>
+  <tr><td>Styling</td><td>Tailwind CSS, fed the same tokens</td><td>The design system in section 6 maps one-to-one onto theme variables</td></tr>
+  <tr><td>Components</td><td>Radix primitives for the dialog and toggle, styled in-house</td><td>Accessible focus trapping and the segmented control come free and correct</td></tr>
+  <tr><td>Forms</td><td>React Hook Form with Zod schemas</td><td>One schema validates in the browser and again on the server</td></tr>
+  <tr><td>Server</td><td>Node with Fastify, or Next.js route handlers if the site is server-rendered</td><td>Server-side amount calculation and webhook handling are the hard requirements</td></tr>
+  <tr><td>Database</td><td>PostgreSQL</td><td>Money needs transactions and a real audit trail</td></tr>
+  <tr><td>Cache and jobs</td><td>Redis for rate limits and the request-expiry timer</td><td>Expiring a Raast request is a scheduled job</td></tr>
+  <tr><td>Payments</td><td>A local provider for Raast request-to-pay, plus a card provider with hosted fields and 3-D Secure</td><td>Keeps the site out of PCI card-data scope</td></tr>
+  <tr><td>Email</td><td>Transactional sender for receipts and monthly reminders</td><td>Receipts are part of the trust promise</td></tr>
+  <tr><td>Hosting</td><td>Static frontend on a CDN, API and database in one region close to donors</td><td>Fast first paint; keep latency low for the region that donates most</td></tr>
+  <tr><td>Monitoring</td><td>Error tracking, uptime checks on the webhook endpoint, and an alert on any payment in a pending state for over an hour</td><td>Silent payment failures are the worst failure mode</td></tr>
+</table>
+
+<h2>Non-functional targets</h2>
+<div class="kv">
+  <b>Performance</b><span>First contentful paint under 1.5s on a mid-range phone over 4G; page weight under 300KB excluding fonts</span>
+  <b>Reliability</b><span>The webhook endpoint target of 99.95%, with events stored raw before processing so nothing is lost</span>
+  <b>Security</b><span>HTTPS only, signed webhooks, rate limiting, and no card data on our infrastructure</span>
+  <b>Privacy</b><span>Store the donor's contact details only with consent; publish a plain-language privacy note</span>
+  <b>Localisation</b><span>English and Urdu, right-to-left ready, PKR default with USD display for overseas donors</span>
+</div>
+
+<!-- ================= 11. PHASES ================= -->
+<h1><span class="num">11</span>Build phases</h1>
+
+<table>
+  <tr><th style="width:16mm">Phase</th><th style="width:44mm">Deliverable</th><th>What is included</th></tr>
+  <tr>
+    <td><b>1</b><br><span class="muted">done</span></td>
+    <td>Clickable prototype</td>
+    <td>All six screens, the full flow, both payment paths, validation and the receipt &mdash; with simulated payments. Reviewed and approved.</td>
+  </tr>
+  <tr>
+    <td><b>2</b></td>
+    <td>Real case content</td>
+    <td>Case list from a database and an API, case detail page with photos and documents, verified badges, share links, English and Urdu copy.</td>
+  </tr>
+  <tr>
+    <td><b>3</b></td>
+    <td>Live payments</td>
+    <td>Raast request-to-pay through the chosen provider, card checkout with hosted fields and 3-D Secure, webhooks, receipts by email, reconciliation job.</td>
+  </tr>
+  <tr>
+    <td><b>4</b></td>
+    <td>Donor accounts</td>
+    <td>Optional sign-in, giving history, monthly plans, downloadable receipts, saved cards by token.</td>
+  </tr>
+  <tr>
+    <td><b>5</b></td>
+    <td>Admin and verification</td>
+    <td>Create and verify a case, upload documents, release funds in stages against bills, a full audit log.</td>
+  </tr>
+  <tr>
+    <td><b>6</b></td>
+    <td>Transparency and growth</td>
+    <td>Public impact page, payout updates shown on each case, zakat and sadaqah tagging, referral links.</td>
+  </tr>
+</table>
+
+<div class="note">
+  <b>Suggested order of decisions.</b> Phase 2 and phase 3 can run in parallel once the payment
+  provider is chosen, because the provider's onboarding and approval takes time. Start that
+  application first &mdash; it is the longest lead item in the whole plan.
+</div>
+
+<h2>What phase 1 already settles</h2>
+<ul>
+  <li>The exact wording and hierarchy of the home page, so copy can be written against it</li>
+  <li>The three-step donation flow and both payment paths, so the provider integration has a fixed contract to implement</li>
+  <li>The complete visual system, so case photography and documents can be commissioned to fit the arch format</li>
+  <li>Every validation rule and error message, so backend and frontend agree before either is built</li>
+</ul>
+
+<!-- ================= 12. OPEN QUESTIONS ================= -->
+<h1><span class="num">12</span>Assumptions &amp; decisions needed</h1>
+
+<p class="lead">These are the points where I have made a reasonable assumption to keep moving. Each one changes the build, so they are worth deciding early.</p>
+
+<table>
+  <tr><th style="width:52mm">Decision</th><th style="width:34mm">Assumption made</th><th>Why it matters</th></tr>
+  <tr>
+    <td><b>Product name</b></td>
+    <td>"Neki" as a placeholder</td>
+    <td>Appears in the header, hero and footer. Changing it later is quick, but a domain and social handles should be confirmed first.</td>
+  </tr>
+  <tr>
+    <td><b>Currency and payment rails</b></td>
+    <td>PKR with Raast, matching the reference screens</td>
+    <td>If donors are mainly overseas, card needs to be the primary method, and the USD display becomes a real conversion rather than display-only.</td>
+  </tr>
+  <tr>
+    <td><b>Payment provider</b></td>
+    <td>Not yet chosen</td>
+    <td>Sets the fee, the settlement time, and the exact webhook contract. Longest lead item &mdash; apply first.</td>
+  </tr>
+  <tr>
+    <td><b>Platform fee</b></td>
+    <td>0% to the case; the donor may optionally cover 2% processing</td>
+    <td>If a fee is charged, the wording on the card and the receipt has to change, and donors must see it before paying.</td>
+  </tr>
+  <tr>
+    <td><b>Zakat eligibility</b></td>
+    <td>Tagged per case, shown as a badge</td>
+    <td>Zakat has rules about who may receive and when funds must be disbursed. Cases need to be reviewed against them, and the wording needs a scholar's sign-off.</td>
+  </tr>
+  <tr>
+    <td><b>Verification process</b></td>
+    <td>Field team verifies each case before listing</td>
+    <td>Who verifies, what evidence is kept, and who can close a case early all need to be defined before the admin panel is built.</td>
+  </tr>
+  <tr>
+    <td><b>Refund policy</b></td>
+    <td>24-hour refund if a case closes early</td>
+    <td>Must be published, and it constrains when funds can be released to a case.</td>
+  </tr>
+  <tr>
+    <td><b>Receipts and tax</b></td>
+    <td>Simple emailed receipt</td>
+    <td>If donors need an official donation receipt for tax, that changes the receipt design and the record keeping.</td>
+  </tr>
+  <tr>
+    <td><b>Monthly giving</b></td>
+    <td>Offered from day one</td>
+    <td>For Raast this needs a recurring mandate, which not every provider supports. May need to launch card-only and add Raast later.</td>
+  </tr>
+</table>
+
+<h2>Recommended next step</h2>
+<ol>
+  <li>Confirm the product name, currency and payment provider so the integration can start.</li>
+  <li>Approve the six screens as they stand, or mark changes to copy and layout.</li>
+  <li>Decide the platform fee and the zakat policy, since both change what the donor reads before paying.</li>
+  <li>Start the payment provider application, then begin phase 2 and phase 3 in parallel.</li>
+</ol>
+
+<footer class="doc">
+  Neki &mdash; website blueprint &middot; Prepared for Arif bhai by Sameer Mukhida &middot; October 2026
+</footer>
+
+</body>
+</html>

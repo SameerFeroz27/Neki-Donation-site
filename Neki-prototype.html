@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Neki — Donate with trust</title>
+<meta name="description" content="Neki is a donation platform for verified campaigns. Donate by Raast request-to-pay or credit / debit card." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+/* =========================================================
+   Neki — donation prototype
+   THEME: Islamic green + gold. No other hues anywhere.
+   Deep green = trust / barakah · gold = generosity
+   Ivory paper + subtle khatam (8-point star) pattern.
+   ========================================================= */
+:root{
+  /* --- green --- */
+  --g900:#04211A; --g800:#073B2C; --g700:#0A4F3A; --g600:#0D6B4C;
+  --g500:#12855F; --g300:#7FB8A0; --g100:#DCEFE5; --g50:#EEF7F2;
+  /* --- gold --- */
+  --gold700:#8A6A1C; --gold600:#A8842A; --gold500:#C9A227;
+  --gold400:#DCBB55; --gold100:#F6ECD2; --gold50:#FBF6E7;
+  /* --- neutrals (warm, green-tinted) --- */
+  --ink:#08201A; --ink2:#1D3A31; --muted:#5D726A;
+  --line:#E4E0D2; --bg:#FBF9F3; --surface:#FFFFFF; --danger:#9C3B2E;
+
+  --r-sm:10px; --r:14px; --r-lg:20px; --r-xl:28px; --r-pill:999px; --r-btn:13px;
+  --sh1:0 1px 2px rgba(8,32,26,.05);
+  --sh2:0 8px 26px -12px rgba(8,32,26,.20);
+  --sh3:0 40px 90px -30px rgba(8,32,26,.45);
+  --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  --pad:clamp(18px,4vw,40px);
+
+  /* khatam star pattern */
+  --pattern:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%230A4F3A' stroke-opacity='.055' stroke-width='1.1'%3E%3Cpath d='M32 4l28 28-28 28L4 32z'/%3E%3Cpath d='M32 14l18 18-18 18-18-18z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);color:var(--ink);line-height:1.55;
+  background:var(--bg);background-image:var(--pattern);-webkit-font-smoothing:antialiased}
+body.modal-open{overflow:hidden}
+h1,h2,h3,h4{margin:0;font-weight:800;line-height:1.15;letter-spacing:-.02em}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+svg{display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.wrap{width:100%;max-width:1120px;margin-inline:auto;padding-inline:var(--pad)}
+
+/* ---------- logo mark (khatam star) ---------- */
+.logo{display:grid;place-items:center;width:34px;height:34px;flex:none;border-radius:11px;
+  background:var(--g700);color:var(--gold400)}
+.logo svg{width:19px;height:19px}
+.logo.tiny{width:17px;height:17px;border-radius:6px}
+.logo.tiny svg{width:11px;height:11px}
+.logo.tile{width:50px;height:50px;border-radius:15px;background:var(--surface);color:var(--g600);
+  border:1px solid var(--line);box-shadow:var(--sh1)}
+.logo.tile svg{width:26px;height:26px}
+.logo.tile.sm{width:30px;height:30px;border-radius:9px}
+.logo.tile.sm svg{width:16px;height:16px}
+
+/* ---------- icons ---------- */
+/* The geometry lives in the sprite at the top of index.html. Stroke, fill
+   and caps are declared once here and inherit through <use>, so a usage
+   site is just <svg class="ico"><use href="#i-name"/></svg> — and a
+   duotone icon can override fill/stroke on its own paths. */
+.sprite{display:none}
+.ico{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- buttons ----------
+   One shape language for every control in the app: a 13px "arch" corner
+   rather than the fully-rounded pill every donation site uses.
+   --btn-r is the single knob that sets it. */
+.btn{--btn-r:var(--r-btn);position:relative;display:inline-flex;align-items:center;
+  justify-content:center;gap:.55rem;padding:.82rem 1.35rem;border-radius:var(--btn-r);
+  border:1px solid transparent;font-weight:700;font-size:.95rem;white-space:nowrap;
+  transition:transform .15s,background .2s,box-shadow .2s,border-color .2s,color .2s}
+.btn:active{transform:translateY(1px)}
+.btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--gold500)}
+.btn-primary{background:var(--g700);color:#fff;box-shadow:0 10px 22px -14px rgba(7,59,44,.9)}
+.btn-primary:hover{background:var(--g800);box-shadow:0 14px 26px -14px rgba(7,59,44,.95)}
+.btn-primary:disabled{opacity:.55;box-shadow:none;cursor:not-allowed}
+.btn-gold{background:var(--gold500);color:#33260A;box-shadow:0 10px 22px -14px rgba(138,106,28,.85)}
+.btn-gold:hover{background:var(--gold400)}
+.btn-ghost{background:var(--surface);border-color:var(--line);color:var(--ink);box-shadow:var(--sh1)}
+.btn-ghost:hover{border-color:var(--g300);background:var(--g50)}
+.btn-block{width:100%}
+.btn-sm{padding:.58rem 1.05rem;font-size:.875rem;--btn-r:11px}
+.btn-lg{padding:.95rem 1.5rem;font-size:1rem;--btn-r:15px}
+/* ready for the payment provider's async calls, which do not exist yet */
+.btn.is-loading{pointer-events:none;color:transparent}
+.btn.is-loading .ico{opacity:0}
+.btn.is-loading::after{content:"";position:absolute;width:1.1em;height:1.1em;
+  border:2px solid rgba(255,255,255,.9);border-top-color:transparent;border-radius:50%;
+  animation:btn-spin .65s linear infinite}
+@keyframes btn-spin{to{transform:rotate(1turn)}}
+
+/* ---------- header ---------- */
+.site-header{position:sticky;top:0;z-index:50;background:rgba(251,249,243,.88);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.header-inner{display:flex;align-items:center;gap:1.5rem;height:68px}
+.brand{display:inline-flex;align-items:center;gap:.6rem;font-weight:800;font-size:1.12rem}
+.nav{display:flex;gap:1.6rem;margin-left:auto;font-size:.92rem;font-weight:600;color:var(--muted)}
+.nav a:hover{color:var(--g700)}
+@media(max-width:820px){.nav{display:none}}
+
+/* ---------- hero ---------- */
+.hero{padding:clamp(36px,6vw,72px) 0 clamp(24px,4vw,44px)}
+.hero-inner{max-width:760px}
+.eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-size:.76rem;font-weight:800;
+  text-transform:uppercase;letter-spacing:.09em;color:var(--g700);background:var(--gold50);
+  border:1px solid var(--gold100);padding:.4rem .85rem;border-radius:var(--r-pill)}
+.eyebrow .logo{background:var(--gold500);color:#fff}
+.app-name{font-size:clamp(3rem,9vw,5.4rem);letter-spacing:-.045em;margin:.75rem 0 .15rem;
+  color:var(--g800)}
+.tagline{font-size:clamp(1.1rem,2.4vw,1.5rem);font-weight:700;color:var(--gold600);margin-bottom:1rem}
+.lede{color:var(--muted);font-size:1.02rem;max-width:62ch}
+.lede strong{color:var(--g700)}
+.hero-stats{display:flex;gap:clamp(22px,5vw,52px);margin-top:2rem;flex-wrap:wrap}
+/* There are no totals until the API provides them. An empty slot must not
+   leave a hole under the lede, so it collapses entirely. */
+.hero-stats:empty{display:none}
+.hero-stats div{display:grid;gap:.1rem}
+.hero-stats b{font-size:1.4rem;font-weight:800;color:var(--g800)}
+.hero-stats span{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+
+/* ---------- sections ---------- */
+.section{padding:clamp(40px,6vw,76px) 0}
+.section-alt{background:var(--g50);border-block:1px solid var(--line)}
+.section-head{max-width:56ch;margin-bottom:2rem}
+.section h2{font-size:clamp(1.5rem,3.2vw,2.1rem);color:var(--g800)}
+.section-head p,.about p{color:var(--muted);margin-top:.5rem}
+.about{max-width:62ch}
+
+/* ---------- campaigns ---------- */
+.campaigns{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.3rem}
+.campaign{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:1.15rem;box-shadow:var(--sh1);
+  transition:transform .2s,box-shadow .25s,border-color .2s}
+.campaign:hover{transform:translateY(-4px);box-shadow:var(--sh2);border-color:var(--g300)}
+
+/* mihrab-arch media block */
+.campaign-arch{position:relative;height:132px;display:flex;align-items:center;justify-content:center;
+  margin-bottom:1rem;border-radius:100px 100px var(--r) var(--r);
+  background:linear-gradient(160deg,var(--g700),var(--g500));
+  background-image:var(--pattern),linear-gradient(160deg,var(--g700),var(--g500));
+  color:var(--gold400);overflow:hidden}
+.campaign-arch::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.22),transparent 62%)}
+/* the category icon sits on a medallion, so it reads as a device rather
+   than a glyph dropped into the arch */
+.arch-medal{position:relative;z-index:1;display:grid;place-items:center;width:66px;height:66px;
+  margin-bottom:16px;border-radius:50%;background:rgba(255,255,255,.10);
+  border:1px solid rgba(220,187,85,.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 10px 22px -14px rgba(4,33,26,.9)}
+.arch-medal::after{content:"";position:absolute;inset:-6px;border-radius:50%;
+  border:1px dashed rgba(220,187,85,.32)}
+.arch-medal .ico{width:33px;height:33px}
+.campaign-tag{position:absolute;bottom:.7rem;left:50%;transform:translateX(-50%);z-index:2;
+  background:var(--gold500);color:#33260A;font-size:.66rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.07em;padding:.25rem .6rem;border-radius:var(--r-pill);white-space:nowrap;margin:0}
+.campaign h3{font-size:1.05rem;margin-bottom:.35rem}
+.campaign .desc{font-size:.87rem;color:var(--muted);flex:1;margin-bottom:.9rem}
+.meta{display:flex;justify-content:space-between;font-size:.77rem;font-weight:700;color:var(--muted);margin-bottom:.4rem}
+.meta b{color:var(--g700)}
+.bar{height:7px;border-radius:var(--r-pill);background:var(--g100);overflow:hidden;margin-bottom:.6rem}
+.bar i{display:block;height:100%;width:0;border-radius:var(--r-pill);
+  background:linear-gradient(90deg,var(--g600),var(--gold500));transition:width 1s .15s ease}
+.campaign .btn{margin-top:.35rem}
+
+/* ---------- footer ---------- */
+.site-footer{border-top:1px solid var(--line);background:var(--surface);padding:1.6rem 0}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.footer-inner p{font-size:.83rem;color:var(--muted)}
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:16px;
+  visibility:hidden;opacity:0;transition:opacity .22s,visibility .22s}
+.modal.open{visibility:visible;opacity:1}
+.modal-backdrop{position:absolute;inset:0;background:rgba(4,33,26,.55);backdrop-filter:blur(5px)}
+
+.sheet{position:relative;width:min(640px,100%);max-height:93vh;overflow-y:auto;
+  background:#F6F9F7;border-radius:var(--r-xl);padding:clamp(18px,3vw,28px);
+  box-shadow:var(--sh3);transform:translateY(16px) scale(.98);
+  transition:transform .28s cubic-bezier(.2,.9,.3,1),width .3s ease}
+.modal.open .sheet{transform:none}
+.sheet[data-view="card"]{width:min(960px,100%)}
+.sheet::-webkit-scrollbar{width:9px}
+.sheet::-webkit-scrollbar-thumb{background:#D5D9D5;border-radius:99px}
+
+/* sheet header */
+.sheet-head{display:flex;align-items:center;gap:.9rem;margin-bottom:1.3rem}
+.sheet-head-text{margin-right:auto;min-width:0}
+.sheet-brand{font-size:.8rem;font-weight:700;color:var(--muted)}
+.sheet-head h3{font-size:clamp(1.3rem,3.4vw,1.75rem);letter-spacing:-.03em}
+.sheet-x{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;flex:none;
+  border:1px solid var(--line);background:var(--surface);color:var(--g700);transition:.18s}
+.sheet-x svg{width:19px;height:19px}
+.sheet-x:hover{background:var(--g50);border-color:var(--g300)}
+
+/* panels */
+.panel[hidden]{display:none}
+
+/* ---------- plan strip (pic 1 & pic 2) ---------- */
+.plan-strip{display:none;gap:1rem;background:var(--g50);border:1px solid var(--g100);
+  border-radius:var(--r-lg);padding:1rem 1.1rem;margin-bottom:1.2rem}
+.sheet[data-view="method"] .plan-strip,
+.sheet[data-view="request"] .plan-strip{display:grid;grid-template-columns:1fr auto;align-items:center}
+@media(max-width:560px){
+  .sheet[data-view="method"] .plan-strip,
+  .sheet[data-view="request"] .plan-strip{grid-template-columns:1fr}
+}
+.kicker{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.kicker.mt{margin-top:1.1rem}
+.pills{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.5rem}
+.pill{display:inline-block;padding:.4rem .85rem;border-radius:var(--r-pill);background:var(--surface);
+  border:1px solid var(--line);font-size:.83rem;font-weight:700;color:var(--ink2);max-width:100%;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill.dark{background:var(--g700);border-color:var(--g700);color:#fff}
+.pill.gold{background:var(--gold100);border-color:var(--gold100);color:var(--gold700)}
+
+.plan-right{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:.8rem 1rem;text-align:right;min-width:230px}
+.plan-right .tiny{font-size:.75rem;font-weight:700;color:var(--muted)}
+.plan-right .big{font-size:1.6rem;font-weight:800;letter-spacing:-.03em;color:var(--ink);line-height:1.2}
+.plan-note{display:flex;align-items:center;justify-content:flex-end;gap:.5rem;margin-top:.5rem;flex-wrap:wrap}
+.plan-note .muted{font-size:.78rem;color:var(--muted)}
+
+/* ---------- amount step ---------- */
+.card-soft{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:1.15rem;box-shadow:var(--sh1)}
+.seg{display:flex;gap:.3rem;background:var(--g50);border:1px solid var(--line);
+  border-radius:var(--r-btn);padding:.3rem;margin-top:.6rem}
+.seg-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
+  padding:.62rem;border-radius:9px;font-weight:700;font-size:.88rem;color:var(--muted);
+  transition:background .18s,color .18s,box-shadow .18s}
+.seg-btn .ico{width:16px;height:16px;stroke-width:2}
+.seg-btn.on{background:var(--g700);color:#fff}
+.seg-btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--gold100),0 0 0 1px var(--gold500)}
+.presets{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-top:.6rem}
+@media(max-width:430px){.presets{grid-template-columns:repeat(2,1fr)}}
+.preset{padding:.78rem .4rem;border:1px solid var(--line);border-radius:var(--r-btn);background:var(--bg);
+  font-weight:800;font-size:.86rem;transition:.15s}
+.preset:hover{border-color:var(--g300)}
+.preset.on{background:var(--gold50);border-color:var(--gold500);color:var(--gold700);
+  box-shadow:inset 0 0 0 1px var(--gold500)}
+.preset:focus-visible{outline:none;box-shadow:0 0 0 3px var(--gold100)}
+.input-money{display:flex;align-items:center;gap:.6rem;margin-top:.6rem;padding:.75rem 1rem;
+  border:1px solid var(--line);border-radius:var(--r);background:var(--bg)}
+.input-money:focus-within{border-color:var(--g600);box-shadow:0 0 0 3px rgba(13,107,76,.14);background:var(--surface)}
+.input-money span{font-weight:800;color:var(--muted);font-size:.9rem}
+.input-money input{flex:1;border:0;background:none;font:inherit;font-size:1.05rem;font-weight:700;color:var(--ink);outline:none;min-width:0}
+.check{display:flex;gap:.6rem;align-items:flex-start;font-size:.83rem;color:var(--muted);
+  margin-top:1rem;cursor:pointer;line-height:1.45}
+.check input{accent-color:var(--g700);width:17px;height:17px;margin:.1rem 0 0;flex:none}
+.panel > .btn-block{margin-top:1rem}
+
+/* ---------- method step (pic 1) ---------- */
+.disclaimer{font-size:.9rem;color:var(--muted);margin-bottom:1rem}
+.methods{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:620px){.methods{grid-template-columns:1fr}}
+.method{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:.5rem;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:1.15rem;box-shadow:var(--sh1);transition:.18s;position:relative}
+.method:hover{border-color:var(--g600);transform:translateY(-3px);box-shadow:var(--sh2)}
+.m-logo{display:grid;place-items:center;width:60px;height:60px;border-radius:18px;flex:none;
+  background:var(--g50);border:1px solid var(--g100);color:var(--g700);margin-bottom:.35rem}
+.m-logo svg{width:28px;height:28px}
+.m-logo.raast{display:flex;flex-direction:column;gap:0;background:var(--surface);border-color:var(--line)}
+.raast-mark{font-size:.92rem;font-weight:800;color:var(--g600);line-height:1;white-space:nowrap}
+.raast-word{font-size:.47rem;font-weight:800;color:var(--gold600);letter-spacing:.06em;text-transform:uppercase;
+  white-space:nowrap;border-top:1.5px dotted var(--gold400);padding-top:.12rem;margin-top:.18rem}
+.m-title{font-size:1.08rem;font-weight:800;letter-spacing:-.02em}
+.m-desc{font-size:.85rem;color:var(--muted);line-height:1.45}
+.tagpill{align-self:flex-start;margin-top:.5rem;padding:.32rem .75rem;border-radius:var(--r-pill);
+  background:var(--g50);border:1px solid var(--g100);color:var(--g700);font-size:.74rem;font-weight:700}
+.link-back{display:block;margin:1rem auto 0;font-size:.84rem;font-weight:700;color:var(--muted)}
+.link-back:hover{color:var(--g700)}
+
+/* ---------- request to pay (pic 2) ---------- */
+.details-row{display:flex;gap:.9rem;align-items:flex-start;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r-lg);padding:1rem 1.1rem;box-shadow:var(--sh1)}
+.details-text b{display:block;font-size:1.02rem}
+.details-text p{font-size:.85rem;color:var(--muted);margin:.2rem 0 .45rem}
+.details-text .tagpill{margin-top:0}
+.toggle{display:flex;gap:.35rem;background:var(--g50);border:1px solid var(--g100);
+  border-radius:var(--r-btn);padding:.35rem;margin-top:1.1rem}
+.toggle-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:.45rem;
+  padding:.7rem .5rem;border-radius:9px;font-weight:700;font-size:.88rem;color:var(--muted);
+  transition:background .18s,color .18s,box-shadow .18s}
+.toggle-btn svg{width:17px;height:17px;stroke-width:2}
+.toggle-btn.on{background:var(--surface);color:var(--ink);box-shadow:var(--sh2)}
+.field-input{width:100%;padding:.85rem 1rem;border:1px solid var(--line);border-radius:var(--r);
+  background:var(--bg);font:inherit;font-size:.95rem;color:var(--ink);transition:.15s}
+.field-input::placeholder{color:#9AA8A2}
+.field-input:focus{outline:none;border-color:var(--g600);background:var(--surface);box-shadow:0 0 0 3px rgba(13,107,76,.14)}
+.field-input.bad{border-color:var(--danger);box-shadow:0 0 0 3px rgba(156,59,46,.12)}
+#req-input{margin-top:1rem;font-weight:700;letter-spacing:.02em}
+.hint{font-size:.77rem;color:var(--muted);margin-top:.45rem}
+.hint.bad{color:var(--danger)}
+.fineprint{font-size:.75rem;color:var(--muted);margin-top:.7rem;line-height:1.5}
+.lock-note{display:flex;align-items:center;gap:.45rem}
+.lock-note svg{width:14px;height:14px;flex:none}
+
+/* ---------- card checkout (pic 3) ---------- */
+.checkout{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(20px,4vw,52px);align-items:start}
+@media(max-width:820px){.checkout{grid-template-columns:1fr}}
+.co-left{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:1.3rem;box-shadow:var(--sh1)}
+.back{font-size:.83rem;font-weight:700;color:var(--muted);margin-bottom:1.1rem}
+.back:hover{color:var(--g700)}
+.co-merchant{display:flex;align-items:center;gap:.6rem;font-size:.74rem;font-weight:800;
+  letter-spacing:.1em;color:var(--muted);margin-bottom:1.2rem}
+.co-label{font-size:1rem;font-weight:700;color:var(--ink2)}
+.co-amount{font-size:clamp(1.6rem,4vw,2.1rem);font-weight:800;letter-spacing:-.035em;margin-top:.15rem}
+.co-amount span{font-size:.85rem;font-weight:600;color:var(--muted);letter-spacing:0}
+.currency{display:flex;gap:.55rem;margin-top:1.1rem}
+.cur{display:flex;align-items:center;justify-content:center;gap:.45rem;flex:1;padding:.7rem;
+  border:1px solid var(--line);border-radius:var(--r);background:var(--surface);font-weight:700;font-size:.9rem}
+.cur.on{border-color:var(--g700);box-shadow:inset 0 0 0 1px var(--g700)}
+.flag-pk,.flag-us{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;
+  font-size:.7rem;font-weight:800;background:var(--g100);color:var(--g700)}
+.flag-us{background:var(--gold100);color:var(--gold700)}
+.rate{font-size:.75rem;color:var(--muted);margin-top:.5rem}
+.line-item{display:flex;align-items:center;gap:.7rem;margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--line)}
+.line-item div{flex:1;min-width:0}
+.line-item b{font-size:.92rem;font-weight:800;display:block}
+.line-item small{font-size:.78rem;color:var(--muted)}
+.li-amt{font-size:.95rem;white-space:nowrap}
+
+.co-right{display:grid;gap:1.1rem}
+.co-block{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:1.2rem;box-shadow:var(--sh1)}
+.co-block-title{font-size:.98rem;font-weight:800;margin-bottom:.8rem}
+.co-field{display:block;margin-top:.9rem}
+.co-field > span{display:block;font-size:.8rem;font-weight:700;color:var(--ink2);margin-bottom:.4rem}
+select.field-input{appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 20px) 52%,calc(100% - 15px) 52%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+
+/* Stripe-style grouped card box */
+.card-box{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.card-box-head{display:flex;align-items:center;gap:.5rem;padding:.8rem 1rem;font-size:.95rem;font-weight:800;
+  border-bottom:1px solid var(--line)}
+.card-box-head svg{width:19px;height:19px;color:var(--g700)}
+.card-box-sub{padding:.75rem 1rem 0;font-size:.79rem;font-weight:700;color:var(--muted)}
+.card-input{position:relative;display:flex;align-items:center;padding:0 .2rem}
+.card-input input{flex:1;width:100%;border:0;background:none;font:inherit;font-size:.95rem;
+  padding:.85rem .8rem;outline:none;color:var(--ink);min-width:0}
+.card-input input::placeholder{color:#9AA8A2}
+.card-input:focus-within{background:var(--g50);box-shadow:inset 0 0 0 2px rgba(13,107,76,.28);border-radius:6px}
+.card-input.half{border-top:1px solid var(--line)}
+.card-input.half input:first-child{flex:1;border-right:1px solid var(--line)}
+.card-input.half input:nth-child(2){flex:0 0 34%}
+.brands{display:flex;align-items:center;gap:.3rem;padding-right:.7rem}
+.b-visa{font-size:.62rem;font-weight:800;font-style:italic;letter-spacing:.02em;color:var(--g700);
+  border:1px solid var(--g300);border-radius:3px;padding:.05rem .25rem;background:var(--surface)}
+.b-mc{position:relative;width:26px;height:16px;display:block}
+.b-mc i{position:absolute;top:0;width:16px;height:16px;border-radius:50%;border:1.4px solid var(--g700);display:block}
+.b-mc i:first-child{left:0;background:var(--g100)}
+.b-mc i:last-child{right:0;background:var(--gold100);border-color:var(--gold600)}
+.cvc-ico{padding-right:.8rem;color:var(--g700)}
+.cvc-ico svg{width:22px;height:17px}
+.err{color:var(--danger);font-size:.77rem;padding:0 1rem}
+.err:empty{display:none}
+
+/* ---------- done ---------- */
+.done{text-align:center}
+.seal{position:relative;display:grid;place-items:center;width:78px;height:78px;margin:.3rem auto 1rem;
+  border-radius:50%;background:var(--g50);border:1px solid var(--g100);color:var(--g600);
+  animation:pop .5s cubic-bezier(.2,1.5,.4,1) both}
+.seal > svg:first-child{width:46px;height:46px;opacity:.35}
+.seal .tick{position:absolute;width:26px;height:26px;color:var(--g700)}
+@keyframes pop{from{transform:scale(.5);opacity:0}}
+.done h3{font-size:1.35rem;color:var(--g800);margin-bottom:.3rem}
+.done-sub{font-size:.9rem;color:var(--muted);margin-bottom:1.2rem}
+.receipt{text-align:left;background:var(--surface);border:1px dashed var(--gold400);border-radius:var(--r-lg);
+  padding:.9rem 1.1rem;margin-bottom:1.2rem}
+.receipt div{display:flex;justify-content:space-between;gap:1rem;padding:.5rem 0;font-size:.86rem;
+  border-bottom:1px dashed var(--line)}
+.receipt div:last-child{border-bottom:0}
+.receipt span{color:var(--muted)}
+.receipt b{font-weight:800;text-align:right}
+.done .btn-block + .btn-block{margin-top:.6rem}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+
+</style>
+</head>
+<body>
+
+<!-- ================= ICON SPRITE =================
+     Every icon lives here once and is referenced as a .ico svg with a
+     "use" pointing at the symbol id (#i-heart and so on). Keeping the
+     geometry in one place means no path data is duplicated across the page
+     or the campaign cards app.js builds, and a new icon is a single
+     definition. Stroke, fill and caps are set once on .ico in styles.css
+     and inherit through "use". -->
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <!-- ui icons -->
+  <symbol id="i-heart" viewBox="0 0 24 24">
+    <path d="M12 20s-7-4.4-7-9.2a4 4 0 0 1 7-2.8 4 4 0 0 1 7 2.8C19 15.6 12 20 12 20Z"/>
+  </symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24">
+    <path d="M4.6 12h14.2"/><path d="m12.8 6 6 6-6 6"/>
+  </symbol>
+  <symbol id="i-send" viewBox="0 0 24 24">
+    <path d="M20.6 3.9 3.7 10.5l6.6 2.4 2.4 6.6Z"/><path d="m10.3 12.9 4.4-4.4"/>
+  </symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24">
+    <rect x="4.8" y="10.4" width="14.4" height="9.4" rx="2.4"/>
+    <path d="M8.4 10.4V7.8a3.6 3.6 0 0 1 7.2 0v2.6"/>
+  </symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24">
+    <rect x="8.6" y="8.6" width="11" height="11" rx="2.2"/>
+    <path d="M15.4 5.4H6.8a2.4 2.4 0 0 0-2.4 2.4v8.6"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.6 4.4 4.4L19 7.4"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24">
+    <rect x="4.4" y="6" width="15.2" height="14" rx="2.6"/>
+    <path d="M4.4 10.4h15.2M9 4.4v3.2M15 4.4v3.2"/>
+  </symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24">
+    <path d="M4.6 12a7.4 7.4 0 0 1 12.6-5.2M19.4 12a7.4 7.4 0 0 1-12.6 5.2"/>
+    <path d="M17.4 3.4v3.6h-3.6M6.6 20.6v-3.6h3.6"/>
+  </symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7 7 17"/></symbol>
+
+  <!-- campaign categories, duotone: a soft mass plus a crisp outline -->
+  <symbol id="i-health" viewBox="0 0 24 24">
+    <path fill="currentColor" stroke="none" opacity=".18"
+          d="M12 20.2s-7.2-4.5-7.2-9.6A4.15 4.15 0 0 1 12 7.5a4.15 4.15 0 0 1 7.2 3.1c0 5.1-7.2 9.6-7.2 9.6Z"/>
+    <path d="M12 20.2s-7.2-4.5-7.2-9.6A4.15 4.15 0 0 1 12 7.5a4.15 4.15 0 0 1 7.2 3.1c0 5.1-7.2 9.6-7.2 9.6Z"/>
+    <path d="M5 12.4h2.8l1.4-2.5 2 4.1 1.5-2.9 1.2 1.3h5.1"/>
+  </symbol>
+  <symbol id="i-food" viewBox="0 0 24 24">
+    <path fill="currentColor" stroke="none" opacity=".18"
+          d="M3.9 11.4h16.2a8.1 8.1 0 0 1-16.2 0Z"/>
+    <path d="M3.9 11.4h16.2a8.1 8.1 0 0 1-16.2 0Z"/>
+    <path d="M5.2 15.4h13.6M8 19h8"/>
+  </symbol>
+  <symbol id="i-water" viewBox="0 0 24 24">
+    <path fill="currentColor" stroke="none" opacity=".18"
+          d="M12 3.6s6.1 6.4 6.1 10.4a6.1 6.1 0 0 1-12.2 0C5.9 10 12 3.6 12 3.6Z"/>
+    <path d="M12 3.6s6.1 6.4 6.1 10.4a6.1 6.1 0 0 1-12.2 0C5.9 10 12 3.6 12 3.6Z"/>
+    <path d="M9.3 14.6a2.7 2.7 0 0 0 2.6 2.4"/>
+  </symbol>
+  <symbol id="i-education" viewBox="0 0 24 24">
+    <path fill="currentColor" stroke="none" opacity=".18"
+          d="M3.6 5.6h6.3a2.4 2.4 0 0 1 2.1 1v11.2a2.6 2.6 0 0 0-2.1-.8H3.6Z"/>
+    <path fill="currentColor" stroke="none" opacity=".18"
+          d="M20.4 5.6h-6.3a2.4 2.4 0 0 0-2.1 1v11.2a2.6 2.6 0 0 1 2.1-.8h6.3Z"/>
+    <path d="M3.6 5.6h6.3a2.4 2.4 0 0 1 2.1 1v11.2a2.6 2.6 0 0 0-2.1-.8H3.6Z"/>
+    <path d="M20.4 5.6h-6.3a2.4 2.4 0 0 0-2.1 1v11.2a2.6 2.6 0 0 1 2.1-.8h6.3Z"/>
+  </symbol>
+  <symbol id="i-emergency" viewBox="0 0 24 24">
+    <path fill="currentColor" stroke="none" opacity=".18"
+          d="M3.9 12a8.1 8.1 0 1 1 16.2 0 8.1 8.1 0 0 1-16.2 0Z"/>
+    <circle cx="12" cy="12" r="8.1"/>
+    <path d="M12 8.3v7.4M8.3 12h7.4"/>
+  </symbol>
+  <symbol id="i-seasonal" viewBox="0 0 24 24">
+    <path fill="currentColor" stroke="none" opacity=".18"
+          d="M19.8 14.5A8.3 8.3 0 0 1 9.5 4.2a8.5 8.5 0 1 0 10.3 10.3Z"/>
+    <path d="M19.8 14.5A8.3 8.3 0 0 1 9.5 4.2a8.5 8.5 0 1 0 10.3 10.3Z"/>
+    <path d="m17.4 4.4.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8Z"/>
+  </symbol>
+</svg>
+
+<!-- ================= HEADER ================= -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4">
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+        </svg>
+      </span>
+      <span class="brand-text">Neki</span>
+    </a>
+    <nav class="nav">
+      <a href="#campaigns">Campaigns</a>
+      <a href="#about">About</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#campaigns" data-scroll>
+      <svg class="ico" viewBox="0 0 24 24"><use href="#i-heart"/></svg>Donate Now
+    </a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ================= APP NAME UPAR, DETAILS NEECHE ================= -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <span class="eyebrow">
+        <span class="logo tiny" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3">
+            <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+            <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+          </svg>
+        </span>
+        Verified campaigns · Zakat &amp; Sadaqah eligible
+      </span>
+
+      <h1 class="app-name">Neki</h1>
+      <p class="tagline">Give with trust.</p>
+
+      <p class="lede">
+        Neki is a donation platform for real, verified campaigns — a widow's monthly ration,
+        a child's surgery, a village hand-pump, a student's fees. Pick a campaign, choose your
+        amount, and pay the way you already pay: <strong>Request to Pay</strong> through
+        Raast, or <strong>credit / debit card</strong>. Every rupee is tracked, and each
+        campaign shows you exactly what it still needs.
+      </p>
+
+      <!-- Platform totals. Deliberately empty: app.js fills this only from
+           real API data (see renderStats), so no number is ever invented here. -->
+      <div class="hero-stats" id="hero-stats" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- ================= CAMPAIGNS ================= -->
+  <section class="section" id="campaigns">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Campaigns you can donate to</h2>
+        <p>Each campaign is verified by our field team. Give once, or set up a monthly gift.</p>
+      </div>
+      <div class="campaigns" id="campaigns-grid"></div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT / TRUST ================= -->
+  <section class="section section-alt" id="about">
+    <div class="wrap about">
+      <h2>About Neki</h2>
+      <p>
+        Donations are held in a dedicated account and released to each campaign in stages,
+        against bills and photos. Our platform fee is 0% — the full amount reaches the campaign.
+        Card details never touch our servers; they are handled by our PCI-DSS compliant
+        payment provider.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4">
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+        </svg>
+      </span>
+      <span class="brand-text">Neki</span>
+    </div>
+    <p>© <span id="year"></span> Neki · Frontend prototype — payments are simulated.</p>
+  </div>
+</footer>
+
+<!-- =========================================================
+     PAYMENT MODAL  (pic 1 / pic 2 / pic 3)
+     ========================================================= -->
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal-backdrop" data-close></div>
+
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+
+    <!-- modal header: logo + brand + title + close -->
+    <header class="sheet-head">
+      <span class="logo tile" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4">
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+        </svg>
+      </span>
+      <div class="sheet-head-text">
+        <p class="sheet-brand">Neki</p>
+        <h3 id="sheet-title">Choose payment method</h3>
+      </div>
+      <button class="sheet-x" type="button" aria-label="Close" data-close>
+        <svg class="ico" viewBox="0 0 24 24"><use href="#i-close"/></svg>
+      </button>
+    </header>
+
+    <!-- ---------- plan strip (pic 1 + pic 2) ---------- -->
+    <div class="plan-strip" id="plan-strip">
+      <div class="plan-left">
+        <p class="kicker">Selected campaign</p>
+        <div class="pills">
+          <span class="pill dark" id="plan-campaign">—</span>
+          <span class="pill" id="plan-freq">One-time</span>
+        </div>
+      </div>
+      <div class="plan-right">
+        <p class="tiny"><span id="plan-method-label">Total donation</span></p>
+        <p class="big" id="plan-amount">PKR 0</p>
+        <div class="plan-note">
+          <span class="pill gold" id="plan-badge">Fee covered</span>
+          <span class="muted" id="plan-note">Campaign receives PKR 0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== STEP 1 — AMOUNT ========== -->
+    <section class="panel" data-panel="amount">
+      <div class="card-soft">
+        <p class="kicker">Give once or monthly</p>
+        <div class="seg" id="frequency">
+          <button type="button" class="seg-btn on" data-freq="once">
+            <svg class="ico" viewBox="0 0 24 24"><use href="#i-calendar"/></svg>One-time
+          </button>
+          <button type="button" class="seg-btn" data-freq="monthly">
+            <svg class="ico" viewBox="0 0 24 24"><use href="#i-repeat"/></svg>Monthly
+          </button>
+        </div>
+
+        <p class="kicker mt">Choose amount</p>
+        <div class="presets" id="presets"></div>
+
+        <div class="input-money">
+          <span>PKR</span>
+          <input id="amount-input" type="text" inputmode="numeric" value="2,000" autocomplete="off" aria-label="Custom amount" />
+        </div>
+
+        <label class="check">
+          <input type="checkbox" id="cover-fee" checked />
+          <span>Add 2% to cover processing, so the campaign receives the full amount.</span>
+        </label>
+      </div>
+
+      <div class="summary"><span>Campaign receives</span><strong id="summary-receive">PKR 2,000</strong></div>
+      <button class="btn btn-primary btn-block btn-lg" type="button" id="to-pay">
+        Continue to payment
+        <svg class="ico" viewBox="0 0 24 24"><use href="#i-arrow-right"/></svg>
+      </button>
+    </section>
+
+    <!-- ========== STEP 2 — CHOOSE METHOD (pic 1) ========== -->
+    <section class="panel" data-panel="method" hidden>
+      <p class="disclaimer" id="method-note">Choose how you would like to pay.</p>
+
+      <div class="methods">
+        <!-- Request to Pay -->
+        <button class="method" type="button" data-goto="request">
+          <span class="m-logo raast" aria-hidden="true">
+            <span class="raast-mark">راست</span>
+            <span class="raast-word">Raast</span>
+          </span>
+          <span class="m-title">Request to Pay</span>
+          <span class="m-desc">Pay instantly from your bank app — no card needed.</span>
+          <span class="tagpill">Powered by Raast</span>
+        </button>
+
+        <!-- Card -->
+        <button class="method" type="button" data-goto="card">
+          <span class="m-logo" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none"><rect x="3" y="7" width="26" height="18" rx="4" stroke="currentColor" stroke-width="2"/><path d="M3 13h26" stroke="currentColor" stroke-width="2"/><path d="M8 20h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <span class="m-title">Credit / Debit Card</span>
+          <span class="m-desc">Visa &amp; Mastercard, secured by 3-D Secure.</span>
+          <span class="tagpill">Secure checkout</span>
+        </button>
+      </div>
+      <button class="link-back" type="button" data-goto="amount">← Change amount</button>
+    </section>
+
+    <!-- ========== STEP 2a — REQUEST TO PAY (pic 2) ========== -->
+    <section class="panel" data-panel="request" hidden>
+      <div class="details-row">
+        <span class="m-logo raast" aria-hidden="true">
+          <span class="raast-mark">راست</span>
+          <span class="raast-word">Raast</span>
+        </span>
+        <div class="details-text">
+          <b>Raast payment details</b>
+          <p>Send <span id="req-amount">PKR 0</span> from your bank app using the ID below.</p>
+          <span class="tagpill">Powered by Raast</span>
+        </div>
+      </div>
+
+      <!-- Mobile ID / IBAN toggle -->
+      <div class="toggle" id="req-toggle">
+        <button type="button" class="toggle-btn on" data-mode="mobile">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M11 18h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          Raast Mobile ID
+        </button>
+        <button type="button" class="toggle-btn" data-mode="iban">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 9.5 12 4l9 5.5M5 10v8m4-8v8m6-8v8m4-8v8M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          IBAN
+        </button>
+      </div>
+
+      <input id="req-input" class="field-input" type="text" inputmode="numeric" placeholder="03xxxxxxxxx" autocomplete="off" />
+      <p class="hint" id="req-hint">11 digits, starting with 03. We only use this to send the request.</p>
+
+      <button class="btn btn-primary btn-block btn-lg" type="button" id="send-request">
+        <svg class="ico" viewBox="0 0 24 24"><use href="#i-send"/></svg>Send request
+      </button>
+      <p class="fineprint">Approve the request in your bank app within 5 minutes. Nothing is charged until you approve it.</p>
+      <button class="link-back" type="button" data-goto="method">← Other payment methods</button>
+    </section>
+
+    <!-- ========== STEP 2b — CARD CHECKOUT (pic 3) ========== -->
+    <section class="panel" data-panel="card" hidden>
+      <div class="checkout">
+        <!-- left pane: summary -->
+        <div class="co-left">
+          <button class="back" type="button" data-goto="method">← Choose payment method</button>
+
+          <p class="co-merchant">
+            <span class="logo tile sm" aria-hidden="true">
+              <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4">
+                <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+                <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+              </svg>
+            </span>
+            NEKI
+          </p>
+
+          <p class="co-label" id="co-campaign-label">Donate to a campaign</p>
+          <p class="co-amount" id="co-amount">PKR 0 <span id="co-per">once</span></p>
+
+          <div class="currency" id="currency">
+            <button type="button" class="cur on" data-cur="PKR"><span class="flag-pk">₨</span> PKR</button>
+            <button type="button" class="cur" data-cur="USD"><span class="flag-us">$</span> USD</button>
+          </div>
+          <p class="rate" id="rate-line">1 USD = 278.50 PKR. Charges vary based on exchange rates.</p>
+
+          <div class="line-item">
+            <span class="logo tile sm" aria-hidden="true">
+              <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4">
+                <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+                <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+              </svg>
+            </span>
+            <div>
+              <b id="li-campaign">Campaign</b>
+              <small id="li-freq">One-time donation</small>
+            </div>
+            <b class="li-amt" id="li-amount">PKR 0</b>
+          </div>
+        </div>
+
+        <!-- right pane: card form -->
+        <form class="co-right" id="card-form" novalidate>
+          <div class="co-block">
+            <p class="co-block-title">Contact information</p>
+            <label class="sr" for="co-email">Email</label>
+            <input id="co-email" class="field-input" type="email" placeholder="Email" value="sameer@example.com" autocomplete="email" />
+          </div>
+
+          <div class="co-block">
+            <p class="co-block-title">Payment method</p>
+
+            <div class="card-box">
+              <p class="card-box-head">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 10h19" stroke="currentColor" stroke-width="1.8"/></svg>
+                Card
+              </p>
+              <p class="card-box-sub">Card information</p>
+
+              <div class="card-input">
+                <input id="card-number" type="text" inputmode="numeric" placeholder="1234 1234 1234 1234" autocomplete="cc-number" maxlength="23" aria-label="Card number" />
+                <span class="brands" id="brands">
+                  <span class="b-visa">VISA</span>
+                  <span class="b-mc"><i></i><i></i></span>
+                </span>
+              </div>
+
+              <div class="card-input half">
+                <input id="card-exp" type="text" inputmode="numeric" placeholder="MM / YY" autocomplete="cc-exp" maxlength="5" aria-label="Expiry" />
+                <input id="card-cvv" type="password" inputmode="numeric" placeholder="CVC" autocomplete="cc-csc" maxlength="4" aria-label="CVC" />
+                <span class="cvc-ico" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5.5" width="19" height="13" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 10h19" stroke="currentColor" stroke-width="1.6"/><path d="M17 13.5h2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                </span>
+              </div>
+              <p class="err" id="card-err"></p>
+            </div>
+
+            <label class="co-field">
+              <span>Cardholder name</span>
+              <input id="card-name" class="field-input" type="text" placeholder="Full name on card" autocomplete="cc-name" />
+            </label>
+
+            <label class="co-field">
+              <span>Country or region</span>
+              <select id="card-country" class="field-input">
+                <option>Pakistan</option><option>India</option><option>United Arab Emirates</option>
+                <option>United Kingdom</option><option>United States</option><option>Other</option>
+              </select>
+            </label>
+          </div>
+
+          <button class="btn btn-primary btn-block btn-lg" type="submit" id="card-submit">
+            <svg class="ico" viewBox="0 0 24 24"><use href="#i-lock"/></svg><span id="card-submit-label">Donate PKR 0</span>
+          </button>
+          <p class="fineprint lock-note">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10" stroke="currentColor" stroke-width="1.8"/></svg>
+            Encrypted and processed by our PCI-DSS compliant provider. We never store your card number.
+          </p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ========== STEP 3 — DONE ========== -->
+    <section class="panel done" data-panel="done" hidden>
+      <span class="seal" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4">
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5"/>
+          <rect x="9.5" y="9.5" width="21" height="21" rx="3.5" transform="rotate(45 20 20)"/>
+        </svg>
+        <svg class="tick" viewBox="0 0 24 24" fill="none"><path d="m5 12.6 4.4 4.4L19 7.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <h3 id="done-title">Donation received</h3>
+      <p class="done-sub" id="done-sub">Thank you. Your gift is on its way to the campaign.</p>
+
+      <div class="receipt">
+        <div><span>Campaign</span><b id="rc-campaign">—</b></div>
+        <div><span>Amount</span><b id="rc-amount">—</b></div>
+        <div><span>Method</span><b id="rc-method">—</b></div>
+        <div><span>Frequency</span><b id="rc-freq">—</b></div>
+        <div><span>Receipt ID</span><b id="rc-id">—</b></div>
+      </div>
+
+      <button class="btn btn-primary btn-block" type="button" id="copy-id">
+        <svg class="ico" viewBox="0 0 24 24"><use href="#i-copy"/></svg><span id="copy-id-label">Copy receipt ID</span>
+      </button>
+      <button class="btn btn-ghost btn-block" type="button" data-close>
+        <svg class="ico" viewBox="0 0 24 24"><use href="#i-check"/></svg>Done
+      </button>
+    </section>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   Neki — prototype logic
+   Flow:  amount → method (pic 1) → request (pic 2) | card (pic 3) → done
+   ========================================================= */
+const CONFIG = {
+  currency: 'PKR',
+  presets: [500, 1000, 2000, 5000],
+  feePercent: 2,
+  usdRate: 278.50,
+};
+
+/* ---------- campaign category icons: green/gold theme only ----------
+   These are sprite ids. The geometry lives in the #i-* symbols in
+   index.html, so a card only names the icon it wants and no path data is
+   duplicated here. */
+const ICONS = {
+  health:   'i-health',
+  food:     'i-food',
+  water:    'i-water',
+  education:'i-education',
+  emergency:'i-emergency',
+  seasonal: 'i-seasonal',
+};
+
+const CAMPAIGNS = [
+  { id:'heart', tag:'Health', icon:'health',
+    title:'Heart surgery for Zainab, 6',
+    desc:'A hole in the heart needs urgent repair. The surgery is booked; the family has covered the tests only.',
+    raised:620000, goal:850000, days:11 },
+  { id:'ration', tag:'Food', icon:'food',
+    title:'6 months of ration for 40 widows',
+    desc:'Flour, rice, oil and lentils delivered monthly to households with no earning member.',
+    raised:184000, goal:480000, days:24 },
+  { id:'water', tag:'Water', icon:'water',
+    title:'Hand-pump for village Gul Bela',
+    desc:'120 families walk 4 km for water. One pump ends it — and the contractor is already on site.',
+    raised:312000, goal:350000, days:6 },
+  { id:'school', tag:'Education', icon:'education',
+    title:'Fees for 25 students this term',
+    desc:'Children who dropped out after the flood are back in class — fees, uniform and books included.',
+    raised:96000, goal:400000, days:31 },
+  { id:'icu', tag:'Emergency', icon:'emergency',
+    title:'ICU stay for an accident victim',
+    desc:'A rickshaw driver needs nine days of intensive care. Every day funded buys him time.',
+    raised:245000, goal:300000, days:4 },
+  { id:'qurbani', tag:'Seasonal', icon:'seasonal',
+    title:'Qurbani shares for 100 families',
+    desc:'Fresh meat reaches families who eat it twice a year. Booked with a verified slaughterhouse.',
+    raised:1200000, goal:2000000, days:47 },
+];
+
+/* ---------- helpers ---------- */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const num = n => Math.round(n).toLocaleString('en-PK');
+const money = n => `${CONFIG.currency} ${num(n)}`;
+const parseAmount = v => Number(String(v).replace(/[^\d]/g, '')) || 0;
+
+/* ---------- state ---------- */
+const state = { c:null, amount:2000, freq:'once', coverFee:true, method:'', mode:'mobile', cur:'PKR' };
+const gross = () => state.freq === 'monthly' ? state.amount
+                 : (state.coverFee ? Math.round(state.amount * (1 + CONFIG.feePercent / 100)) : state.amount);
+
+/* =========================================================
+   1. Campaigns
+   ========================================================= */
+$('#campaigns-grid').innerHTML = CAMPAIGNS.map(c => {
+  const pct = Math.min(100, Math.round(c.raised / c.goal * 100));
+  return `
+  <article class="campaign">
+    <div class="campaign-arch">
+      <span class="arch-medal">
+        <svg class="ico" viewBox="0 0 24 24"><use href="#${ICONS[c.icon]}"/></svg>
+      </span>
+      <span class="campaign-tag">${c.tag}</span>
+    </div>
+    <h3>${c.title}</h3>
+    <p class="desc">${c.desc}</p>
+    <div class="meta"><span>Raised <b>${money(c.raised)}</b></span><span>${pct}%</span></div>
+    <div class="bar"><i data-pct="${pct}"></i></div>
+    <div class="meta"><span>Goal ${money(c.goal)}</span><span>${c.days} days left</span></div>
+    <button class="btn btn-primary btn-block" type="button" data-donate="${c.id}">
+      <svg class="ico" viewBox="0 0 24 24"><use href="#i-heart"/></svg>Donate Now
+    </button>
+  </article>`;
+}).join('');
+
+/* Force a layout pass first: it commits the bars at their CSS width of 0,
+   so the CSS transition still animates. Setting the widths synchronously
+   rather than inside requestAnimationFrame means they are always correct —
+   rAF never fires while the tab is in the background, which would otherwise
+   leave every progress bar empty. */
+void $('#campaigns-grid').offsetHeight;
+$$('#campaigns-grid .bar i').forEach(i => i.style.width = i.dataset.pct + '%');
+
+/* presets */
+$('#presets').innerHTML = CONFIG.presets.map((v, i) =>
+  `<button type="button" class="preset${i === 1 ? ' on' : ''}" data-amt="${v}">${money(v)}</button>`).join('');
+
+/* =========================================================
+   2. Modal + views
+   ========================================================= */
+const modal = $('#modal'), sheet = $('#sheet');
+const TITLES = {
+  amount:'Make a donation', method:'Choose payment method',
+  request:'Raast payment details', card:'Card payment', done:'Donation complete',
+};
+let lastFocus = null;
+
+function view(v) {
+  sheet.dataset.view = v;
+  $$('.panel', modal).forEach(p => p.hidden = p.dataset.panel !== v);
+  $('#sheet-title').textContent = TITLES[v];
+  sheet.scrollTop = 0;
+}
+
+function openModal(cause) {
+  Object.assign(state, { c:cause, amount:CONFIG.presets[1], freq:'once', coverFee:true, method:'', mode:'mobile', cur:'PKR' });
+  $$('.seg-btn').forEach(b => b.classList.toggle('on', b.dataset.freq === 'once'));
+  $$('.preset').forEach(b => b.classList.toggle('on', parseAmount(b.dataset.amt) === state.amount));
+  $$('.cur').forEach(b => b.classList.toggle('on', b.dataset.cur === 'PKR'));
+  $('#cover-fee').checked = true;
+  $('#card-form').reset();
+  $('#card-err').textContent = '';
+  $('#req-input').value = '';
+  setMode('mobile');
+  $('#plan-campaign').textContent = cause.title;
+  refreshAmounts();   // also resets the amount field, so a stale custom
+  lastFocus = document.activeElement;   // amount can never outlive its state
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+  view('amount');
+  setTimeout(() => $('#to-pay').focus(), 220);
+}
+
+function closeModal() {
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+  if (lastFocus) lastFocus.focus();
+}
+
+/* open / navigate / close */
+document.addEventListener('click', e => {
+  const d = e.target.closest('[data-donate]');
+  if (d) { const c = CAMPAIGNS.find(x => x.id === d.dataset.donate); if (c) openModal(c); return; }
+
+  const g = e.target.closest('[data-goto]');
+  if (g) {
+    const v = g.dataset.goto;
+    if (v === 'method') $('#plan-method-label').textContent = 'Total donation';
+    view(v);
+    return;
+  }
+  if (e.target.closest('[data-close]')) closeModal();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+});
+
+$('[data-scroll]').addEventListener('click', e => {
+  e.preventDefault(); $('#campaigns').scrollIntoView({ behavior:'smooth' });
+});
+
+/* =========================================================
+   3. Amount view
+   ========================================================= */
+function refreshAmounts() {
+  $('#amount-input').value = num(state.amount);
+  $$('.preset').forEach(b => b.classList.toggle('on', parseAmount(b.dataset.amt) === state.amount));
+  $('#to-pay').disabled = state.amount < 1;
+  refresh();
+}
+
+function refresh() {
+  const g = gross();
+  const net = state.freq === 'monthly' ? state.amount
+            : Math.round(state.amount / (state.coverFee ? 1 + CONFIG.feePercent / 100 : 1));
+  const per = state.freq === 'monthly' ? ' / month' : '';
+
+  /* plan strip */
+  $('#plan-freq').textContent = state.freq === 'monthly' ? 'Monthly' : 'One-time';
+  $('#plan-amount').textContent = money(g) + per;
+  $('#plan-badge').textContent = state.coverFee && state.freq === 'once' ? 'Fee covered' : '0% platform fee';
+  $('#plan-note').textContent = `Campaign receives ${money(net)}`;
+
+  /* amount step: what the campaign actually receives */
+  $('#summary-receive').textContent = money(net) + (state.freq === 'monthly' ? ' / month' : '');
+
+  /* request view */
+  $('#req-amount').textContent = money(g);
+
+  /* card view (pic 3) */
+  const usd = g / CONFIG.usdRate;
+  const shown = state.cur === 'PKR' ? money(g) : `$${usd.toFixed(2)}`;
+  $('#co-amount').innerHTML = `${shown} <span id="co-per">${state.freq === 'monthly' ? 'per month' : 'once'}</span>`;
+  $('#co-campaign-label').textContent = `Donate to ${state.c ? state.c.title : 'a campaign'}`;
+  $('#li-campaign').textContent = state.c ? state.c.title : 'Campaign';
+  $('#li-freq').textContent = state.freq === 'monthly' ? 'Monthly donation' : 'One-time donation';
+  $('#li-amount').textContent = shown;
+  $('#card-submit-label').textContent = `Donate ${shown}`;
+}
+
+$('#frequency').addEventListener('click', e => {
+  const b = e.target.closest('.seg-btn'); if (!b) return;
+  state.freq = b.dataset.freq;
+  $$('.seg-btn').forEach(x => x.classList.toggle('on', x === b));
+  refreshAmounts();
+});
+$('#presets').addEventListener('click', e => {
+  const b = e.target.closest('.preset'); if (!b) return;
+  state.amount = parseAmount(b.dataset.amt); refreshAmounts();
+});
+$('#amount-input').addEventListener('input', e => {
+  const raw = e.target.value;
+  state.amount = parseAmount(raw);
+  e.target.value = raw === '' ? '' : num(state.amount);
+  refreshAmounts();
+});
+$('#amount-input').addEventListener('blur', () => {
+  if (!state.amount) { state.amount = CONFIG.presets[0]; refreshAmounts(); }
+});
+$('#cover-fee').addEventListener('change', e => { state.coverFee = e.target.checked; refresh(); });
+
+$('#to-pay').addEventListener('click', () => {
+  if (state.amount < 1) return;
+  $('#plan-method-label').textContent = 'Total donation';
+  view('method');
+});
+
+/* =========================================================
+   4. Request to Pay (pic 2)
+   ========================================================= */
+function setMode(mode) {
+  state.mode = mode;
+  $$('.toggle-btn').forEach(b => b.classList.toggle('on', b.dataset.mode === mode));
+  const input = $('#req-input'), hint = $('#req-hint');
+  if (mode === 'mobile') {
+    input.placeholder = '03xxxxxxxxx';
+    input.inputMode = 'numeric';
+    input.maxLength = 11;
+    hint.textContent = '11 digits, starting with 03. We only use this to send the request.';
+  } else {
+    input.placeholder = 'PK00 XXXX 0000 0000 0000 0000';
+    input.inputMode = 'text';
+    input.maxLength = 29;
+    hint.textContent = '24 characters, starting with PK. You will find it in your bank app.';
+  }
+  input.value = '';
+  input.classList.remove('bad');
+  hint.classList.remove('bad');
+}
+
+$('#req-toggle').addEventListener('click', e => {
+  const b = e.target.closest('.toggle-btn');
+  if (b) setMode(b.dataset.mode);
+});
+
+$('#req-input').addEventListener('input', e => {
+  let v = e.target.value;
+  if (state.mode === 'mobile') v = v.replace(/\D/g, '').slice(0, 11);
+  else v = v.toUpperCase().replace(/[^A-Z0-9]/g, '').replace(/(.{4})/g, '$1 ').trim().slice(0, 29);
+  e.target.value = v;
+});
+
+$('#send-request').addEventListener('click', () => {
+  const input = $('#req-input'), hint = $('#req-hint');
+  const v = input.value.trim();
+  // Raast Mobile ID is 03 + 9 digits; a PK IBAN is PK + 2 check digits
+  // + a 4-letter bank code + 16 digits (24 characters in total)
+  const ok = state.mode === 'mobile'
+    ? /^03\d{9}$/.test(v.replace(/\s/g, ''))
+    : /^PK\d{2}[A-Z]{4}\d{16}$/.test(v.replace(/\s/g, ''));
+  input.classList.toggle('bad', !ok);
+  hint.classList.toggle('bad', !ok);
+  if (!ok) {
+    hint.textContent = state.mode === 'mobile'
+      ? 'Enter a valid 11-digit Raast Mobile ID (03XXXXXXXXX).'
+      : 'Enter a valid 24-character IBAN starting with PK.';
+    input.focus(); return;
+  }
+  state.method = `Raast Request to Pay · ${v}`;
+  finish('Request sent', 'Approve the request in your bank app within 5 minutes. If it expires, you can send it again.');
+});
+
+/* =========================================================
+   5. Card (pic 3)
+   ========================================================= */
+const cardNum = $('#card-number'), cardExp = $('#card-exp'), cardCvv = $('#card-cvv'), cardName = $('#card-name');
+const brandOf = d => /^4/.test(d) ? 'VISA' : /^(5[1-5]|2[2-7])/.test(d) ? 'MASTERCARD'
+                    : /^3[47]/.test(d) ? 'AMEX' : /^62/.test(d) ? 'UNIONPAY' : '';
+
+cardNum.addEventListener('input', () => {
+  cardNum.value = cardNum.value.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim();
+  const b = brandOf(cardNum.value.replace(/\D/g, ''));
+  $('.b-visa').style.opacity = (!b || b === 'VISA') ? '1' : '.3';
+  $('.b-mc').style.opacity = (!b || b === 'MASTERCARD') ? '1' : '.3';
+});
+cardExp.addEventListener('input', () => {
+  let d = cardExp.value.replace(/\D/g, '').slice(0, 4);
+  cardExp.value = d.length >= 3 ? d.slice(0, 2) + ' / ' + d.slice(2) : d;
+});
+cardCvv.addEventListener('input', () => { cardCvv.value = cardCvv.value.replace(/\D/g, '').slice(0, 4); });
+
+$('#currency').addEventListener('click', e => {
+  const b = e.target.closest('.cur'); if (!b) return;
+  state.cur = b.dataset.cur;
+  $$('.cur').forEach(x => x.classList.toggle('on', x === b));
+  refresh();
+});
+
+function luhn(n) {
+  let sum = 0, alt = false;
+  for (let i = n.length - 1; i >= 0; i--) {
+    let d = +n[i];
+    if (alt) { d *= 2; if (d > 9) d -= 9; }
+    sum += d; alt = !alt;
+  }
+  return sum % 10 === 0;
+}
+
+$('#card-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const err = $('#card-err');
+  const digits = cardNum.value.replace(/\D/g, '');
+  const brand = brandOf(digits);
+  const need = brand === 'AMEX' ? 15 : 16;
+  const [mm, yy] = cardExp.value.split('/').map(s => s.trim());
+  const m = +mm, y = +yy, now = new Date();
+  const cvvLen = brand === 'AMEX' ? 4 : 3;
+
+  let msg = '';
+  if (!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test($('#co-email').value.trim())) msg = 'Enter a valid email for your receipt.';
+  else if (digits.length !== need) msg = `Card number must be ${need} digits.`;
+  else if (!luhn(digits)) msg = 'That card number looks invalid.';
+  else if (!mm || !yy || m < 1 || m > 12) msg = 'Enter the expiry as MM / YY.';
+  else if (y < now.getFullYear() % 100 || (y === now.getFullYear() % 100 && m < now.getMonth() + 1)) msg = 'This card has expired.';
+  else if (cardCvv.value.length !== cvvLen) msg = `CVC must be ${cvvLen} digits.`;
+  else if (cardName.value.trim().length < 3) msg = 'Enter the full name printed on the card.';
+
+  [cardNum, cardExp, cardCvv, cardName].forEach(i => i.classList.toggle('bad', !!msg));
+  err.textContent = msg;
+  if (msg) { sheet.scrollTop = 0; return; }
+
+  state.method = `${brand.charAt(0) + brand.slice(1).toLowerCase()} ···· ${digits.slice(-4)}`;
+  finish('Payment successful', `We charged ${money(gross())} and sent a receipt to your email.`);
+});
+
+/* =========================================================
+   6. Done
+   ========================================================= */
+function finish(title, sub) {
+  $('#done-title').textContent = title;
+  $('#done-sub').textContent = sub;
+  $('#rc-campaign').textContent = state.c.title;
+  $('#rc-amount').textContent = money(gross()) + (state.freq === 'monthly' ? ' / month' : '');
+  $('#rc-method').textContent = state.method;
+  $('#rc-freq').textContent = state.freq === 'monthly' ? 'Monthly' : 'One-time';
+  $('#rc-id').textContent = 'NK-' + Date.now().toString(36).toUpperCase().slice(-8);
+  view('done');
+}
+
+$('#copy-id').addEventListener('click', () => {
+  /* only the label changes — writing to the button itself would drop its icon */
+  const label = $('#copy-id-label');
+  navigator.clipboard?.writeText($('#rc-id').textContent);
+  const old = label.textContent;
+  label.textContent = 'Copied ✓';
+  setTimeout(() => label.textContent = old, 1600);
+});
+
+/* =========================================================
+   7. Platform totals (hero)
+   Nothing about these numbers is hard-coded. renderStats draws
+   only what the API hands it and draws nothing at all while
+   there is no data, so the hero can never show an invented
+   figure. Expected contract:
+
+     GET /api/stats -> { campaignsFunded, totalRaised, averagePayoutHours }
+
+   Wire it up by calling renderStats(stats) once that endpoint
+   exists; until then the hero simply has no totals, which is
+   the intended state.
+   ========================================================= */
+const STAT_LABELS = {
+  campaignsFunded:   "campaigns funded",
+  totalRaised:       "raised so far",
+  averagePayoutHours:"average payout",
+};
+
+function statValue(key, v) {
+  if (key === "totalRaised")        return money(v);
+  if (key === "averagePayoutHours") return num(v) + " hrs";
+  return num(v);
+}
+
+function renderStats(stats = null) {
+  const box = $("#hero-stats");
+  if (!box) return;
+  const rows = Object.entries(stats || {})
+    .filter(([k, v]) => k in STAT_LABELS && v !== null && v !== undefined && v !== "");
+  box.innerHTML = rows
+    .map(([k, v]) => `<div><b>${statValue(k, v)}</b><span>${STAT_LABELS[k]}</span></div>`)
+    .join("");
+}
+
+/* =========================================================
+   8. Boot
+   ========================================================= */
+setMode('mobile');
+refreshAmounts();
+$('#year').textContent = new Date().getFullYear();
+renderStats();
+
+</script>
+</body>
+</html>

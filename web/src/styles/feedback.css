@@ -1,0 +1,88 @@
+/* =========================================================
+   Feedback states — empty, error, loading.
+
+   Generic on purpose: the campaign grid uses them now, and the donation
+   flow and receipt will need the same vocabulary later.
+   ========================================================= */
+.state-block {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: 2.2rem 1.5rem;
+  text-align: center;
+  border: 1px dashed var(--g300);
+  border-radius: var(--r-lg);
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--muted);
+}
+.state-block b {
+  color: var(--g700);
+  font-size: 1rem;
+}
+.state-block .state-body {
+  font-size: 0.9rem;
+  max-width: 46ch;
+}
+.state-block .btn {
+  margin-top: 0.6rem;
+}
+.state-block.is-error {
+  border-style: solid;
+  border-color: var(--danger);
+  background: rgba(156, 59, 46, 0.05);
+}
+.state-block.is-error b {
+  color: var(--danger);
+}
+
+.state-mark {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 0.3rem;
+  border-radius: 50%;
+  background: var(--g50);
+  border: 1px solid var(--g100);
+  color: var(--g600);
+}
+.state-mark .ico {
+  width: 22px;
+  height: 22px;
+}
+.state-block.is-error .state-mark {
+  background: rgba(156, 59, 46, 0.08);
+  border-color: var(--danger-ring);
+  color: var(--danger);
+}
+
+/* ---------- shimmer skeleton ---------- */
+.skeleton-line {
+  display: block;
+  height: 11px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--g50), var(--g100), var(--g50));
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+.skeleton-line--title {
+  height: 15px;
+  width: 78%;
+  margin-bottom: 0.6rem;
+}
+.skeleton-line--short {
+  width: 58%;
+  margin-bottom: 0.8rem;
+}
+.skeleton-line--meta {
+  height: 9px;
+  width: 40%;
+}
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}

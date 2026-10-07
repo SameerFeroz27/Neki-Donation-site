@@ -1,0 +1,202 @@
+/* =========================================================
+   Campaign grid and cards.
+   The grid is a list, so it stays a list to assistive tech without
+   list-style bullets getting in the way.
+   ========================================================= */
+.campaigns {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1.3rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.campaign-item {
+  display: flex;
+}
+
+.campaign {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 1.15rem;
+  box-shadow: var(--sh1);
+  transition:
+    transform 0.2s,
+    box-shadow 0.25s,
+    border-color 0.2s;
+}
+.campaign:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sh2);
+  border-color: var(--g300);
+}
+
+/* ---------- mihrab-arch media block ---------- */
+.campaign-arch {
+  position: relative;
+  height: 132px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  border-radius: 100px 100px var(--r) var(--r);
+  background-image:
+    var(--pattern), linear-gradient(160deg, var(--g700), var(--g500));
+  color: var(--gold400);
+  overflow: hidden;
+}
+.campaign-arch::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 0%,
+    rgba(255, 255, 255, 0.22),
+    transparent 62%
+  );
+}
+
+/* the category icon sits on a medallion, so it reads as a device rather
+   than a glyph dropped into the arch */
+.arch-medal {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(220, 187, 85, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 10px 22px -14px rgba(4, 33, 26, 0.9);
+}
+.arch-medal::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px dashed rgba(220, 187, 85, 0.32);
+}
+.arch-medal .ico {
+  width: 33px;
+  height: 33px;
+}
+
+.campaign-tag {
+  position: absolute;
+  bottom: 0.7rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  background: var(--gold500);
+  color: #33260a;
+  font-size: 0.66rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+}
+
+/* trust signal: the field team has checked this campaign.
+   Pinned to the medallion, not the arch corner — the mihrab's heavy top
+   radius clips away anything placed in that corner. */
+.campaign-verified {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--gold500);
+  color: #33260a;
+  box-shadow: 0 4px 10px -4px rgba(4, 33, 26, 0.7);
+}
+.campaign-verified .ico {
+  width: 14px;
+  height: 14px;
+}
+
+/* ---------- card body ---------- */
+.campaign h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.35rem;
+}
+.campaign .desc {
+  font-size: 0.87rem;
+  color: var(--muted);
+  flex: 1;
+  margin-bottom: 0.9rem;
+}
+.campaign .btn {
+  margin-top: auto;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.77rem;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+.meta b {
+  color: var(--g700);
+}
+.meta .closing-soon {
+  color: var(--gold700);
+}
+
+.bar {
+  height: 7px;
+  border-radius: var(--r-pill);
+  background: var(--g100);
+  overflow: hidden;
+  margin-bottom: 0.6rem;
+}
+/* Grows from zero on mount with no JavaScript: the animation's `from` is 0
+   and its `to` is the element's own width, fed in through --pct. */
+.bar i {
+  display: block;
+  height: 100%;
+  width: var(--pct, 0%);
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--g600), var(--gold500));
+  animation: bar-grow 1s 0.15s ease both;
+}
+@keyframes bar-grow {
+  from {
+    width: 0;
+  }
+}
+
+.campaign-funded {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.77rem;
+  font-weight: 700;
+  color: var(--g700);
+  margin-bottom: 0.7rem;
+}
+
+/* ---------- loading placeholder ----------
+   Same height as a real card so the section does not jump when data lands. */
+.campaign-arch--skeleton {
+  background-image: linear-gradient(160deg, var(--g50), var(--g100));
+}
+.campaign-arch--skeleton::after {
+  display: none;
+}

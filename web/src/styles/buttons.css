@@ -1,0 +1,121 @@
+/* =========================================================
+   Buttons
+   One shape language for every control: a 13px arch corner
+   rather than the fully-rounded pill every donation site uses.
+   --btn-r is the single knob that sets it, so a size variant
+   only has to change that one value.
+   ========================================================= */
+.btn {
+  --btn-r: var(--r-btn);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.82rem 1.35rem;
+  border-radius: var(--btn-r);
+  border: 1px solid transparent;
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  transition:
+    transform 0.15s,
+    background 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.btn--primary {
+  background: var(--g700);
+  color: #fff;
+  box-shadow: 0 10px 22px -14px rgba(7, 59, 44, 0.9);
+}
+.btn--primary:hover {
+  background: var(--g800);
+  box-shadow: 0 14px 26px -14px rgba(7, 59, 44, 0.95);
+}
+.btn--primary:disabled {
+  opacity: 0.55;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Gold is the emphasis colour reserved for the single most important
+   action on a screen; green stays the default. */
+.btn--gold {
+  background: var(--gold500);
+  color: #33260a;
+  box-shadow: 0 10px 22px -14px rgba(138, 106, 28, 0.85);
+}
+.btn--gold:hover {
+  background: var(--gold400);
+}
+
+.btn--ghost {
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--ink);
+  box-shadow: var(--sh1);
+}
+.btn--ghost:hover {
+  border-color: var(--g300);
+  background: var(--g50);
+}
+
+.btn--block {
+  width: 100%;
+}
+.btn--sm {
+  padding: 0.58rem 1.05rem;
+  font-size: 0.875rem;
+  --btn-r: 11px;
+}
+.btn--lg {
+  padding: 0.95rem 1.5rem;
+  font-size: 1rem;
+  --btn-r: 15px;
+}
+
+/* A real loading state, ready for the payment provider's async calls. */
+.btn.is-loading {
+  pointer-events: none;
+  color: transparent;
+}
+.btn.is-loading .ico {
+  opacity: 0;
+}
+.btn.is-loading::after {
+  content: '';
+  position: absolute;
+  width: 1.1em;
+  height: 1.1em;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: btn-spin 0.65s linear infinite;
+}
+@keyframes btn-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* Quiet inline text action, e.g. "change amount" under a form. */
+.link-back {
+  display: block;
+  margin: 1rem auto 0;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.link-back:hover {
+  color: var(--g700);
+}
